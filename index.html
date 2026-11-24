@@ -1,0 +1,2280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>STRANGER THINGS // Hawkins Lab &amp; Upside Down AI</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Libre Baskerville / Cinzel (Benguiat-style), Orbitron & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@300;400;500;600;700&family=Libre+Baskerville:wght@700&family=Orbitron:wght@500;700;900&family=Press+Start+2P&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-glow: #ff2a1a;
+      --secondary-glow: #d946ef;
+      --bg-cosmic-top: #090312;
+      --bg-cosmic-mid: #120826;
+      --bg-cosmic-bot: #240b36;
+      --panel-bg: rgba(12, 6, 26, 0.84);
+      --border-color: rgba(255, 42, 26, 0.45);
+    }
+
+    /* Persona Theme Variations */
+    body.theme-cerebro {
+      --primary-glow: #ff2a1a;
+      --secondary-glow: #d946ef;
+      --border-color: rgba(255, 42, 26, 0.48);
+    }
+    body.theme-eleven {
+      --primary-glow: #ec4899;
+      --secondary-glow: #38bdf8;
+      --border-color: rgba(236, 72, 153, 0.6);
+    }
+    body.theme-dustin {
+      --primary-glow: #10b981;
+      --secondary-glow: #06b6d4;
+      --border-color: rgba(16, 185, 129, 0.6);
+    }
+    body.theme-steve {
+      --primary-glow: #3b82f6;
+      --secondary-glow: #f59e0b;
+      --border-color: rgba(245, 158, 11, 0.6);
+    }
+    body.theme-vecna {
+      --primary-glow: #e11d48;
+      --secondary-glow: #9333ea;
+      --border-color: rgba(225, 29, 72, 0.7);
+    }
+    body.theme-mindflayer {
+      --primary-glow: #ef4444;
+      --secondary-glow: #3b82f6;
+      --border-color: rgba(239, 68, 68, 0.7);
+    }
+
+    * {
+      box-sizing: border-box;
+      scrollbar-width: thin;
+      scrollbar-color: var(--primary-glow) #090312;
+    }
+
+    body {
+      margin: 0;
+      background: linear-gradient(180deg, var(--bg-cosmic-top) 0%, var(--bg-cosmic-mid) 48%, var(--bg-cosmic-bot) 100%);
+      color: #f8fafc;
+      font-family: 'Inter', sans-serif;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    #chatContainer, #userInput {
+      user-select: text;
+    }
+
+    /* Authentic Benguiat-Style Hollow Red-Orange Neon Title */
+    .st-benguiat {
+      font-family: 'Libre Baskerville', 'Cinzel', serif;
+      font-weight: 700;
+      color: transparent;
+      -webkit-text-stroke: 2.2px #ff331f;
+      text-shadow:
+        0 0 10px rgba(255, 42, 26, 0.95),
+        0 0 26px rgba(255, 107, 53, 0.75),
+        0 0 50px rgba(220, 38, 38, 0.6);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    @media (min-width: 640px) {
+      .st-benguiat {
+        -webkit-text-stroke: 3.2px #ff331f;
+      }
+    }
+
+    .st-neon-bar {
+      height: 3.5px;
+      background: linear-gradient(90deg, #ff2a1a, #ff6b35, #ff2a1a);
+      box-shadow: 0 0 14px #ff2a1a, 0 0 28px #ff6b35;
+      border-radius: 999px;
+    }
+
+    .font-cyber { font-family: 'Orbitron', sans-serif; }
+    .font-retro { font-family: 'Press Start 2P', cursive; }
+
+    /* CRT Scanlines & Cosmic Vignette */
+    .crt-overlay {
+      background:
+        radial-gradient(circle at center, transparent 50%, rgba(4, 1, 10, 0.78) 100%),
+        linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+      background-size: 100% 100%, 100% 3px;
+      pointer-events: none;
+    }
+
+    /* Chromatic Glitch Jitter */
+    @keyframes chromaJitter {
+      0%, 88%, 100% {
+        transform: translate(0, 0);
+        text-shadow: 0 0 10px rgba(255, 42, 26, 0.95), 0 0 28px rgba(255, 107, 53, 0.65);
+      }
+      90% {
+        transform: translate(-3px, 1px);
+        text-shadow: -3px 0 #00f0ff, 3px 0 #ff2a1a, 0 0 25px #ff2a1a;
+      }
+      93% {
+        transform: translate(3px, -1px);
+        text-shadow: 3px 0 #d946ef, -3px 0 #ff6b35, 0 0 32px #ff2a1a;
+      }
+    }
+    .st-chroma-jitter {
+      animation: chromaJitter 2.6s infinite;
+    }
+
+    /* 3D Camera Flythrough Zoom Entrance (0s - 5s) */
+    @keyframes stFlythrough {
+      0% {
+        transform: perspective(750px) translateZ(360px) scale(2.05);
+        opacity: 0;
+        filter: blur(12px);
+        letter-spacing: 0.36em;
+      }
+      22% {
+        opacity: 1;
+        filter: blur(0px);
+      }
+      100% {
+        transform: perspective(750px) translateZ(0px) scale(1);
+        opacity: 1;
+        letter-spacing: 0.08em;
+      }
+    }
+    .animate-st-flythrough {
+      animation: stFlythrough 4.8s cubic-bezier(0.14, 0.92, 0.28, 1) forwards;
+    }
+
+    /* Center Dimensional Rift Tear Glow */
+    @keyframes riftBreath {
+      0%, 100% { transform: scaleY(0.95) scaleX(0.92); opacity: 0.85; }
+      50% { transform: scaleY(1.1) scaleX(1.18); opacity: 1; }
+    }
+    .rift-core-anim {
+      animation: riftBreath 1.7s ease-in-out infinite;
+    }
+
+    /* 5.0s Massive Dimensional Shockwave Ring */
+    @keyframes shockwaveBlast {
+      0% {
+        transform: scale(0.08);
+        opacity: 1;
+        border-width: 24px;
+      }
+      100% {
+        transform: scale(5.5);
+        opacity: 0;
+        border-width: 1px;
+      }
+    }
+    .shockwave-ring {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: 240px;
+      height: 240px;
+      margin-left: -120px;
+      margin-top: -120px;
+      border-radius: 9999px;
+      border-style: solid;
+      border-color: #ff2a1a;
+      box-shadow: 0 0 80px #ff2a1a, 0 0 120px #d946ef, inset 0 0 55px #ffffff;
+      pointer-events: none;
+      z-index: 60;
+      animation: shockwaveBlast 0.95s cubic-bezier(0.12, 0.82, 0.24, 1) forwards;
+    }
+
+    /* Glitch Screen Shake */
+    @keyframes screenGlitch {
+      0%, 100% { transform: translate(0, 0) skew(0deg); }
+      20% { transform: translate(-10px, 4px) skew(-5deg); filter: hue-rotate(70deg); }
+      40% { transform: translate(10px, -4px) skew(5deg); filter: invert(0.2); }
+      60% { transform: translate(-6px, -3px) skew(-3deg); }
+      80% { transform: translate(6px, 3px) skew(3deg); }
+    }
+    .glitch-active {
+      animation: screenGlitch 0.4s cubic-bezier(.25, .46, .45, .94) infinite;
+    }
+
+    /* Upside Down 180° Gravity Flip Easter Egg */
+    body.upside-down-flipped #chatbotApp {
+      transform: rotate(180deg);
+      filter: hue-rotate(-24deg) contrast(1.18);
+    }
+    #chatbotApp {
+      transition: transform 1.15s cubic-bezier(0.22, 1, 0.36, 1), filter 0.8s ease;
+    }
+
+    /* Hanging Swinging 3D Christmas Light Bulbs */
+    @keyframes bulbSway {
+      0%, 100% { transform: rotate(-4.5deg); }
+      50% { transform: rotate(4.5deg); }
+    }
+    .bulb-hanger {
+      transform-origin: top center;
+      animation: bulbSway 3.1s ease-in-out infinite;
+    }
+    .bulb {
+      width: 13px;
+      height: 19px;
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      position: relative;
+      transition: all 0.12s ease;
+      opacity: 0.3;
+      transform: scale(0.92);
+      background-image: radial-gradient(circle at 35% 28%, rgba(255,255,255,0.85) 0%, transparent 45%);
+    }
+    .bulb::before {
+      content: '';
+      position: absolute;
+      top: -4px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 6px;
+      height: 5px;
+      background: #1e1b2e;
+      border-radius: 2px;
+      border-top: 1px solid #64748b;
+    }
+    .bulb.lit {
+      opacity: 1;
+      transform: scale(1.38);
+      box-shadow: 0 0 16px currentColor, 0 0 36px currentColor, 0 0 56px currentColor;
+      filter: brightness(1.45);
+    }
+
+    /* Character Showcase Card Animations & Ken Burns Motion */
+    @keyframes cardMaterialize {
+      0% {
+        opacity: 0;
+        transform: translateY(55px) scale(0.72) rotateX(28deg);
+        filter: brightness(2.4) blur(8px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1) rotateX(0deg);
+        filter: brightness(1) blur(0px);
+      }
+    }
+    .showcase-card {
+      animation: cardMaterialize 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      transform-style: preserve-3d;
+      transition: transform 0.25s ease, box-shadow 0.3s ease;
+    }
+    .showcase-card:hover {
+      transform: translateY(-8px) scale(1.04);
+      z-index: 25;
+    }
+
+    @keyframes kenBurnsRoar {
+      0%, 100% { transform: scale(1.04) translate(0, 0); }
+      50% { transform: scale(1.16) translate(-2%, -2%); }
+    }
+    @keyframes kenBurnsFloat {
+      0%, 100% { transform: scale(1.05) translateY(0px); }
+      50% { transform: scale(1.12) translateY(-6px); }
+    }
+    @keyframes kenBurnsPanLeft {
+      0%, 100% { transform: scale(1.32) translate(0, 0); }
+      50% { transform: scale(1.42) translate(-2%, -1%); }
+    }
+    @keyframes kenBurnsPanRight {
+      0%, 100% { transform: scale(1.38) translate(0, 0); }
+      50% { transform: scale(1.48) translate(2%, -2%); }
+    }
+    @keyframes kenBurnsVecna {
+      0%, 100% { transform: scale(1.06) rotate(0deg); filter: contrast(1.1) saturate(1.15); }
+      50% { transform: scale(1.15) rotate(-1deg); filter: contrast(1.25) saturate(1.35); }
+    }
+    @keyframes kenBurnsStorm {
+      0%, 100% { transform: scale(1.06); filter: brightness(0.95); }
+      48% { transform: scale(1.13); filter: brightness(1.05); }
+      50% { transform: scale(1.16); filter: brightness(1.65) contrast(1.3); }
+      53% { transform: scale(1.13); filter: brightness(1.0); }
+    }
+
+    .anim-img-demogorgon { animation: kenBurnsRoar 4.2s ease-in-out infinite; }
+    .anim-img-eleven { animation: kenBurnsFloat 3.6s ease-in-out infinite; }
+    .anim-img-steve { animation: kenBurnsPanLeft 4.5s ease-in-out infinite; }
+    .anim-img-dustin { animation: kenBurnsPanRight 4.0s ease-in-out infinite; }
+    .anim-img-vecna { animation: kenBurnsVecna 4.8s ease-in-out infinite; }
+    .anim-img-mindflayer { animation: kenBurnsStorm 3.4s ease-in-out infinite; }
+
+    /* Signature Card Overlays */
+    @keyframes psychicRingExpand {
+      0% { transform: translate(-50%, -50%) scale(0.2); opacity: 0.95; }
+      100% { transform: translate(-50%, -50%) scale(2.3); opacity: 0; }
+    }
+    .psychic-ring-fx {
+      position: absolute;
+      top: 42%;
+      left: 50%;
+      width: 72px;
+      height: 72px;
+      border-radius: 9999px;
+      border: 2px solid #38bdf8;
+      box-shadow: 0 0 18px #ec4899, inset 0 0 14px #38bdf8;
+      pointer-events: none;
+      animation: psychicRingExpand 1.6s cubic-bezier(0.12, 0.8, 0.25, 1) infinite;
+    }
+
+    @keyframes batSlashSweep {
+      0%, 75%, 100% { opacity: 0; transform: rotate(-28deg) scaleX(0.4); }
+      82% { opacity: 1; transform: rotate(-28deg) scaleX(1.15); }
+      92% { opacity: 0; transform: rotate(-28deg) scaleX(1.3); }
+    }
+    .bat-slash-fx {
+      position: absolute;
+      top: 45%;
+      left: -10%;
+      width: 120%;
+      height: 4px;
+      background: linear-gradient(90deg, transparent, #fbbf24, #ffffff, #38bdf8, transparent);
+      box-shadow: 0 0 18px #fbbf24;
+      pointer-events: none;
+      animation: batSlashSweep 2.4s ease-in-out infinite;
+    }
+
+    @keyframes cerebroPing {
+      0% { transform: translate(-50%, -50%) scale(0.15); opacity: 1; }
+      100% { transform: translate(-50%, -50%) scale(2.2); opacity: 0; }
+    }
+    .cerebro-radar-fx {
+      position: absolute;
+      top: 26%;
+      left: 50%;
+      width: 68px;
+      height: 68px;
+      border-radius: 9999px;
+      border: 2px dashed #10b981;
+      box-shadow: 0 0 14px #06b6d4;
+      pointer-events: none;
+      animation: cerebroPing 1.8s linear infinite;
+    }
+
+    @keyframes pendulumShadow {
+      0%, 100% { transform: rotate(-22deg); }
+      50% { transform: rotate(22deg); }
+    }
+    .vecna-pendulum-fx {
+      transform-origin: top center;
+      animation: pendulumShadow 1.6s ease-in-out infinite;
+    }
+
+    /* Ambient Live Character Backdrop Behind Terminal */
+    #ambientCharacterBackdrop {
+      transition: opacity 0.85s ease, transform 8s ease-out, filter 0.8s ease;
+    }
+
+    /* Chat Bubble Hologram Entry */
+    @keyframes holoBubble {
+      0% { opacity: 0; transform: translateY(10px) scale(0.98); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .msg-materialize { animation: holoBubble 0.25s ease-out forwards; }
+
+    /* Glass Synthwave Panel */
+    .synth-panel {
+      background: var(--panel-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-color);
+      box-shadow: 0 0 36px rgba(9, 3, 18, 0.88), inset 0 0 24px rgba(217, 70, 239, 0.08);
+      transition: all 0.4s ease;
+    }
+
+    /* Live Mini Audio Equalizer Bars */
+    @keyframes eqBounce {
+      0%, 100% { height: 4px; }
+      50% { height: 13px; }
+    }
+    .eq-bar {
+      width: 2.5px;
+      background: #ff4d4d;
+      border-radius: 999px;
+      height: 4px;
+    }
+    .eq-playing .eq-bar:nth-child(1) { animation: eqBounce 0.55s ease-in-out infinite 0s; }
+    .eq-playing .eq-bar:nth-child(2) { animation: eqBounce 0.45s ease-in-out infinite 0.15s; }
+    .eq-playing .eq-bar:nth-child(3) { animation: eqBounce 0.6s ease-in-out infinite 0.3s; }
+
+    @keyframes pulseDot {
+      0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+      40% { transform: scale(1.25); opacity: 1; }
+    }
+    .typing-dot:nth-child(1) { animation: pulseDot 1.2s infinite 0s; }
+    .typing-dot:nth-child(2) { animation: pulseDot 1.2s infinite 0.2s; }
+    .typing-dot:nth-child(3) { animation: pulseDot 1.2s infinite 0.4s; }
+  </style>
+</head>
+<body class="theme-cerebro h-screen w-screen relative overflow-hidden">
+
+  <!-- Uploaded Stranger Things Official Theme Audio Element -->
+  <audio id="strangerThemeAudio" src="stranger_things.mp3" preload="auto" loop></audio>
+
+  <!-- Live Ambient Character Photo Backdrop Layer -->
+  <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+    <img id="ambientCharacterBackdrop" src="image_cd55d6.jpg" alt="" class="w-full h-full object-cover opacity-20 scale-105 filter blur-[2px] saturate-125" onerror="this.style.display='none'" />
+    <div class="absolute inset-0 bg-gradient-to-b from-[#090312]/80 via-[#120826]/70 to-[#090312]/90"></div>
+  </div>
+
+  <!-- 3D PERSPECTIVE SYNTHWAVE GRID + SILHOUETTE CLIFFS + SPORES + VINES CANVAS -->
+  <canvas id="synthwaveCanvas" class="fixed inset-0 w-full h-full pointer-events-none z-0"></canvas>
+
+  <!-- CRT Retro Scanlines & Cosmic Vignette -->
+  <div class="fixed inset-0 crt-overlay z-40"></div>
+
+  <!-- ===================================================================== -->
+  <!-- STAGE 0: INITIAL LAUNCH GATE (Unlocks stranger_things.mp3 + 3D Intro) -->
+  <!-- ===================================================================== -->
+  <section id="startGate" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#090312]/88 backdrop-blur-md px-4 text-center">
+    <div class="max-w-xl w-full p-7 sm:p-9 rounded-3xl border border-red-500/55 bg-[#0e071d]/92 shadow-[0_0_95px_rgba(255,42,26,0.4),0_0_140px_rgba(217,70,239,0.22)] relative overflow-hidden">
+      <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-fuchsia-500 via-red-500 to-orange-500 animate-pulse"></div>
+      
+      <p class="font-cyber text-[11px] sm:text-xs tracking-[0.35em] text-fuchsia-400 uppercase mb-4 animate-pulse">
+        HAWKINS LAB AI // UPSIDE DOWN NEURAL TERMINAL
+      </p>
+      
+      <!-- Authentic Split Benguiat Stranger Things Title -->
+      <div class="flex flex-col items-center mb-5">
+        <div class="st-neon-bar w-64 sm:w-96 mb-2"></div>
+        <h1 class="st-benguiat st-chroma-jitter text-3xl sm:text-5xl leading-none">STRANGER</h1>
+        <div class="flex items-center gap-3 w-64 sm:w-96 mt-1">
+          <div class="st-neon-bar flex-1"></div>
+          <span class="st-benguiat text-2xl sm:text-4xl leading-none">THINGS</span>
+          <div class="st-neon-bar flex-1"></div>
+        </div>
+      </div>
+
+      <!-- Mini Cast Preview Strip -->
+      <div class="flex items-center justify-center gap-2 mb-6">
+        <img src="image_cd5218.jpg" alt="Demogorgon" class="w-10 h-10 rounded-full object-cover border-2 border-red-500 shadow-[0_0_12px_#ff2a1a]" onerror="this.style.display='none'" />
+        <img src="image_cd5278.png" alt="Eleven" class="w-10 h-10 rounded-full object-cover object-top border-2 border-pink-400 shadow-[0_0_12px_#ec4899]" onerror="this.style.display='none'" />
+        <img src="image_cd555a.jpg" alt="Steve" style="object-position: 22% 18%;" class="w-10 h-10 rounded-full object-cover border-2 border-amber-400 shadow-[0_0_12px_#f59e0b]" onerror="this.style.display='none'" />
+        <img src="image_cd555a.jpg" alt="Dusty Bun" style="object-position: 82% 28%;" class="w-10 h-10 rounded-full object-cover border-2 border-emerald-400 shadow-[0_0_12px_#10b981]" onerror="this.style.display='none'" />
+        <img src="image_cd5597.jpg" alt="Vecna" class="w-10 h-10 rounded-full object-cover object-top border-2 border-fuchsia-500 shadow-[0_0_12px_#d946ef]" onerror="this.style.display='none'" />
+        <img src="image_cd55d6.jpg" alt="Mind Flayer" class="w-10 h-10 rounded-full object-cover border-2 border-blue-500 shadow-[0_0_12px_#3b82f6]" onerror="this.style.display='none'" />
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mt-2">
+        <button id="launchSequenceBtn" class="w-full sm:w-auto px-6 py-4 rounded-xl bg-gradient-to-r from-red-600 via-rose-600 to-fuchsia-700 hover:from-red-500 hover:to-fuchsia-600 text-white font-cyber font-bold tracking-widest text-xs sm:text-sm shadow-[0_0_36px_rgba(255,42,26,0.9)] hover:shadow-[0_0_54px_rgba(217,70,239,0.95)] transform hover:scale-105 transition-all cursor-pointer">
+          ⚡ ENTER HAWKINS LAB (PLAY THEME &amp; INTRO)
+        </button>
+
+        <button id="skipToChatDirectBtn" class="w-full sm:w-auto px-4 py-4 rounded-xl border border-purple-500/45 hover:border-red-400 text-slate-300 hover:text-white font-cyber text-xs tracking-wider transition-all cursor-pointer">
+          SKIP TO CHAT ⏭
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- STAGE 1 & 2: 0–5s DIMENSIONAL RIFT INTRO + 6-CHARACTER PHOTO SHOWCASE -->
+  <!-- ===================================================================== -->
+  <section id="cinematicStage" class="fixed inset-0 z-30 hidden flex-col items-center justify-between p-3 sm:p-6 bg-transparent overflow-y-auto">
+    
+    <!-- Top HUD Bar -->
+    <div class="w-full max-w-7xl flex items-center justify-between z-20 shrink-0">
+      <div class="flex items-center gap-3 bg-[#090312]/80 px-3.5 py-1.5 rounded-full border border-red-500/45">
+        <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
+        <span id="sequencePhaseLabel" class="font-cyber text-[10px] sm:text-xs tracking-[0.2em] text-red-400 uppercase">
+          0.0s–5.0s // DIMENSIONAL RIFT FLYTHROUGH
+        </span>
+      </div>
+
+      <div class="flex items-center gap-2 sm:gap-3">
+        <span id="timerBadge" class="font-retro text-xs text-red-400 bg-[#090312]/90 border border-red-500/55 px-3 py-1.5 rounded-lg shadow-[0_0_16px_rgba(255,42,26,0.45)]">
+          00:05
+        </span>
+        <button id="skipIntroBtn" class="px-3.5 py-1.5 rounded-lg bg-[#0e071d]/90 hover:bg-red-900/80 border border-purple-500/45 hover:border-red-500 text-xs font-cyber tracking-wider text-slate-200 transition cursor-pointer">
+          CHAT TERMINAL &gt;&gt;
+        </button>
+      </div>
+    </div>
+
+    <!-- PHASE 1 (0.0s - 5.0s): CENTER DIMENSIONAL RIFT TEAR + 3D STRANGER THINGS TITLE + COUNTDOWN HUD -->
+    <div id="phaseOneTitle" class="flex-1 flex flex-col items-center justify-center text-center z-10 w-full relative">
+      
+      <!-- Glowing Crimson Dimensional Rift Tear SVG Behind Title -->
+      <svg class="absolute w-72 sm:w-96 h-72 sm:h-96 opacity-80 rift-core-anim pointer-events-none" viewBox="0 0 200 200">
+        <defs>
+          <radialGradient id="riftGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#ff2a1a" stop-opacity="0.95"/>
+            <stop offset="55%" stop-color="#d946ef" stop-opacity="0.45"/>
+            <stop offset="100%" stop-color="#090312" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <ellipse cx="100" cy="100" rx="62" ry="90" fill="url(#riftGlow)"/>
+        <path d="M100 8 L85 58 L115 96 L83 142 L100 192 L113 140 L89 98 L111 56 Z" fill="#ff2a1a" opacity="0.9" style="filter: drop-shadow(0 0 18px #ff2a1a);"/>
+      </svg>
+
+      <!-- Authentic Framed "STRANGER THINGS" 3D Flythrough Title -->
+      <div class="animate-st-flythrough flex flex-col items-center relative z-10">
+        <div class="st-neon-bar w-72 sm:w-[560px] mb-2.5"></div>
+        <h1 class="st-benguiat st-chroma-jitter text-4xl sm:text-7xl md:text-8xl leading-none">
+          STRANGER
+        </h1>
+        <div class="flex items-center gap-3 sm:gap-5 w-72 sm:w-[560px] mt-1.5">
+          <div class="st-neon-bar flex-1"></div>
+          <span class="st-benguiat st-chroma-jitter text-3xl sm:text-6xl md:text-7xl leading-none">
+            THINGS
+          </span>
+          <div class="st-neon-bar flex-1"></div>
+        </div>
+        <p class="font-cyber text-[11px] sm:text-sm tracking-[0.42em] text-fuchsia-300 mt-4 drop-shadow-[0_0_12px_rgba(217,70,239,0.95)]">
+          HAWKINS LAB AI // NEURAL RIFT
+        </p>
+      </div>
+
+      <!-- 80s Analog Synth Equalizer -->
+      <div id="synthBars" class="flex items-end justify-center gap-1.5 h-12 mt-6 relative z-10"></div>
+
+      <!-- 5.0s Energy Charge Countdown HUD -->
+      <div class="mt-6 w-full max-w-md bg-[#090312]/85 border border-red-500/45 rounded-2xl px-4 py-3 shadow-[0_0_28px_rgba(255,42,26,0.35)] relative z-10">
+        <div class="flex items-center justify-between text-[11px] font-cyber mb-1.5">
+          <span id="breachCountdownText" class="text-red-400 tracking-widest">BREACHING RIFT IN 5...</span>
+          <span id="chargePercentText" class="text-fuchsia-300 font-bold">0%</span>
+        </div>
+        <div class="w-full h-2.5 bg-purple-950 rounded-full overflow-hidden">
+          <div id="riftChargeFill" class="h-full bg-gradient-to-r from-red-600 via-orange-500 to-fuchsia-500 w-0 shadow-[0_0_16px_#ff2a1a]"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PHASE 2 (5.0s+): LIGHT BLINKS STORM + 6-CHARACTER ANIMATED PHOTO SHOWCASE -->
+    <div id="phaseTwoShowcase" class="hidden flex-1 flex-col items-center justify-center w-full max-w-7xl z-10 gap-3 my-2">
+      
+      <!-- Hanging Byers Christmas Lights Blink Storm Wall -->
+      <div class="w-full max-w-4xl bg-[#090312]/88 border border-amber-400/50 rounded-2xl p-2.5 sm:p-3.5 shadow-[0_0_40px_rgba(255,180,0,0.28)] relative overflow-hidden">
+        <div class="flex items-center justify-between mb-1.5 px-2">
+          <span class="font-cyber text-[10px] tracking-widest text-amber-400">BYERS WALL // LIGHT BLINKS DIMENSIONAL SIGNAL</span>
+          <span id="wallDecodedWord" class="font-retro text-xs sm:text-sm text-amber-300 tracking-widest">R U N</span>
+        </div>
+        <div id="christmasWall" class="grid grid-cols-9 sm:grid-cols-13 gap-1.5 justify-items-center py-0.5"></div>
+      </div>
+
+      <!-- 6-Character Parallax Photo Stage: Demogorgon, Eleven, Steve, Dusty Bun, Vecna, Mind Flayer -->
+      <div id="characterStage" class="w-full grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 sm:gap-3.5 px-1"></div>
+
+      <!-- Stage 2 Interactive Controls -->
+      <div class="flex flex-wrap items-center justify-center gap-2.5 mt-1">
+        <button id="stage2LightStormBtn" class="px-4 py-2.5 rounded-xl bg-amber-500/25 hover:bg-amber-500/40 border border-amber-400/65 text-xs font-cyber text-amber-300 transition cursor-pointer">
+          ⚡ LIGHT BLINKS STORM
+        </button>
+        <button id="stage2ReplayBtn" class="px-4 py-2.5 rounded-xl bg-[#0e071d]/90 hover:bg-purple-950 border border-purple-500/45 text-xs font-cyber text-slate-200 transition cursor-pointer">
+          ↻ REPLAY 5s INTRO
+        </button>
+        <button id="enterChatHeroBtn" class="px-6 py-3 rounded-xl bg-gradient-to-r from-red-600 via-rose-600 to-fuchsia-600 hover:from-red-500 hover:to-fuchsia-500 text-white font-cyber font-bold text-xs sm:text-sm tracking-widest shadow-[0_0_32px_rgba(255,42,26,0.95)] animate-pulse cursor-pointer">
+          💬 ENTER CEREBRO CHAT TERMINAL &gt;&gt;
+        </button>
+      </div>
+    </div>
+
+    <!-- Bottom Overall Sequence Bar -->
+    <div class="w-full max-w-7xl z-20 shrink-0 mt-1.5">
+      <div class="w-full h-1.5 bg-purple-950/90 rounded-full overflow-hidden border border-purple-800/50">
+        <div id="introProgressBar" class="h-full bg-gradient-to-r from-red-600 via-orange-500 to-fuchsia-500 w-0 transition-all duration-100"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- STAGE 3: CLEAN CHATGPT-STYLE HAWKINS LAB AI CHATBOT INTERFACE         -->
+  <!-- ===================================================================== -->
+  <main id="chatbotApp" class="relative z-10 h-screen w-screen hidden flex-col md:flex-row overflow-hidden">
+
+    <!-- Mobile Sidebar Backdrop -->
+    <div id="mobileSidebarOverlay" class="hidden fixed inset-0 z-30 bg-black/70 backdrop-blur-sm md:hidden"></div>
+
+    <!-- Left Sidebar (ChatGPT-Style History & New Chat) -->
+    <aside id="chatSidebar" class="hidden md:flex fixed md:static inset-y-0 left-0 z-40 w-64 lg:w-72 shrink-0 flex-col bg-[#07020e]/92 backdrop-blur-xl border-r border-purple-900/55 p-3.5 shadow-2xl md:shadow-none">
+      <div class="flex items-center justify-between px-2 py-2 mb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-red-600 to-purple-900 border border-red-400/60 flex items-center justify-center font-cyber font-bold text-xs text-white shadow-[0_0_12px_rgba(255,42,26,0.5)]">
+            ST
+          </div>
+          <div>
+            <div class="font-cyber text-xs font-bold text-white tracking-wider">HAWKINS AI</div>
+            <div class="text-[10px] text-slate-400">Cerebro Chat Terminal</div>
+          </div>
+        </div>
+        <button id="closeMobileSidebarBtn" type="button" class="md:hidden text-slate-400 hover:text-white text-sm px-2 py-1 cursor-pointer">✕</button>
+      </div>
+
+      <button id="newChatSidebarBtn" type="button" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-white/[0.05] hover:bg-red-600/25 border border-purple-700/60 hover:border-red-400/60 text-xs font-medium text-white transition mb-4 cursor-pointer">
+        <span>+ New Chat</span>
+        <span class="font-cyber text-[10px] text-red-400">⌘N</span>
+      </button>
+
+      <div class="text-[10px] font-cyber text-slate-400 tracking-wider px-2 mb-2">RECENT CHATS</div>
+      <div id="chatHistoryList" class="flex-1 overflow-y-auto space-y-1.5 pr-1"></div>
+
+      <div class="pt-3 mt-2 border-t border-purple-900/50 space-y-1.5">
+        <button id="replayIntroBtn" type="button" class="w-full text-left px-3 py-2 rounded-xl text-xs text-slate-300 hover:bg-white/5 transition cursor-pointer">
+          🎬 Replay 5s Intro
+        </button>
+        <button id="clearChatBtn" type="button" class="w-full text-left px-3 py-2 rounded-xl text-xs text-slate-300 hover:bg-white/5 transition cursor-pointer">
+          🧹 Clear Conversation
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Chat Area -->
+    <div class="flex-1 flex flex-col h-full min-w-0 bg-[#05010b]/72 backdrop-blur-md">
+
+      <!-- Clean Minimal Top Header -->
+      <header class="shrink-0 flex items-center justify-between gap-2 px-3 sm:px-5 py-2.5 border-b border-purple-900/50 bg-[#080312]/90">
+        <div class="flex items-center gap-2 sm:gap-2.5 min-w-0">
+          <button id="openMobileSidebarBtn" type="button" class="md:hidden px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-purple-700/60 text-xs text-white cursor-pointer" title="Chat History">
+            ☰
+          </button>
+          <button id="mobileNewChatBtn" type="button" class="md:hidden px-2.5 py-1.5 rounded-lg bg-white/5 border border-purple-700/60 text-xs text-white cursor-pointer" title="New Chat">
+            +
+          </button>
+          <img id="activeHeaderAvatar" src="image_cd55d6.jpg" alt="Persona" class="w-8 h-8 rounded-xl object-cover border border-red-400/60 shrink-0" onerror="this.style.display='none'" />
+          <select id="headerPersonaSelect" aria-label="Select Character Persona" class="bg-[#0e051d] border border-purple-700/60 text-xs sm:text-sm font-medium text-white rounded-xl px-2.5 py-1.5 focus:outline-none focus:border-red-400 cursor-pointer truncate">
+            <option value="cerebro">Cerebro AI (Mainframe)</option>
+            <option value="eleven">Eleven (011)</option>
+            <option value="steve">Steve Harrington</option>
+            <option value="dustin">Dustin (Dusty Bun)</option>
+            <option value="vecna">Vecna (001)</option>
+            <option value="mindflayer">Demogorgon &amp; Mind Flayer</option>
+          </select>
+          <span id="apiModeBadge" class="hidden sm:inline-block text-[10px] font-cyber px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/40">
+            CEREBRO AI ⚡
+          </span>
+        </div>
+
+        <div class="flex items-center gap-1.5 sm:gap-2">
+          <button id="lightningSurgeBtn" type="button" title="Trigger Rift Lightning" class="p-2 rounded-xl bg-white/5 hover:bg-red-500/20 border border-purple-800/60 text-xs transition cursor-pointer">
+            ⚡
+          </button>
+          <button id="blinkStormBtn" type="button" title="Blink Wall Lights" class="p-2 rounded-xl bg-white/5 hover:bg-amber-500/20 border border-purple-800/60 text-xs transition cursor-pointer">
+            💡
+          </button>
+          <button id="toggleAudioBtn" type="button" title="Toggle Stranger Things Theme Music" class="flex items-center gap-1.5 px-2.5 py-2 rounded-xl bg-white/5 hover:bg-red-500/20 border border-purple-800/60 text-xs transition cursor-pointer">
+            <span id="audioIcon">🔊</span>
+            <span id="miniEq" class="hidden sm:inline-flex items-end gap-0.5 h-3.5">
+              <span class="eq-bar"></span>
+              <span class="eq-bar"></span>
+              <span class="eq-bar"></span>
+            </span>
+          </button>
+          <button id="openApiModalBtn" type="button" class="px-3 py-1.5 rounded-xl bg-red-600/20 hover:bg-red-600/35 border border-red-400/50 text-xs font-cyber text-red-200 transition cursor-pointer">
+            🔑 API KEY
+          </button>
+        </div>
+      </header>
+
+      <!-- Subtle Mini Alphabet Lights Strip -->
+      <div class="shrink-0 bg-[#06020e]/85 border-b border-purple-950/70 px-3 py-1.5 flex items-center justify-between gap-2 overflow-x-auto">
+        <div id="headerLightsStrip" class="flex items-center gap-1.5 sm:gap-2 mx-auto"></div>
+        <span id="liveWallTransmission" class="hidden lg:inline-block font-cyber text-[10px] text-amber-300/80 tracking-widest shrink-0">READY</span>
+      </div>
+
+      <!-- Messages Scroll Container -->
+      <div id="chatContainer" class="flex-1 overflow-y-auto px-4 sm:px-8 py-5 space-y-4 max-w-4xl w-full mx-auto">
+        <div id="chatGptWelcomeHero" class="h-full flex flex-col items-center justify-center text-center py-6">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-red-600 to-purple-950 border border-red-400/70 overflow-hidden shadow-[0_0_20px_rgba(255,42,26,0.45)] mb-3">
+            <img src="image_cd55d6.jpg" alt="Hawkins AI" class="w-full h-full object-cover" onerror="this.style.display='none'" />
+          </div>
+          <h2 class="font-cyber font-bold text-lg sm:text-xl text-white tracking-wide mb-1.5">
+            What can I help with?
+          </h2>
+          <p class="text-xs text-slate-400 max-w-md mb-5">
+            Ask any question, write code, or try <span class="text-red-400">UPSIDE DOWN</span>, <span class="text-fuchsia-400">VECNA</span>, &amp; <span class="text-amber-300">LIGHT BLINKS</span> commands.
+          </p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 w-full max-w-xl text-left">
+            <button type="button" class="quick-prompt p-3 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] border border-purple-800/50 hover:border-red-400/60 transition cursor-pointer" data-prompt="Explain how an AI Chatbot works for my college viva!">
+              <div class="text-xs font-medium text-slate-200">🎓 Explain AI Chatbot for Viva</div>
+              <div class="text-[11px] text-slate-400 mt-0.5">Simple &amp; clear architecture overview</div>
+            </button>
+            <button type="button" class="quick-prompt p-3 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] border border-purple-800/50 hover:border-cyan-400/60 transition cursor-pointer" data-prompt="Write a clean Python program for binary search with explanation.">
+              <div class="text-xs font-medium text-slate-200">💻 Python Binary Search</div>
+              <div class="text-[11px] text-slate-400 mt-0.5">Clean code with step-by-step logic</div>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Clean Bottom Input Box -->
+      <div class="shrink-0 px-4 sm:px-8 pb-4 pt-2 max-w-4xl w-full mx-auto">
+        <form id="chatForm" class="flex items-center gap-2 rounded-2xl bg-[#0d051a]/95 backdrop-blur-md border border-purple-700/70 focus-within:border-red-400/90 focus-within:shadow-[0_0_24px_rgba(255,42,26,0.28)] px-3 py-2 shadow-[0_0_25px_rgba(0,0,0,0.65)] transition">
+          <button id="voiceInputBtn" type="button" title="Voice Input (Mic)" class="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 transition cursor-pointer">
+            🎙️
+          </button>
+          <input
+            id="userInput"
+            type="text"
+            autocomplete="off"
+            placeholder="Message Hawkins AI..."
+            class="flex-1 bg-transparent text-sm text-white placeholder-slate-400 focus:outline-none px-1 min-w-0"
+          />
+          <button type="submit" class="px-4 py-2 rounded-xl bg-gradient-to-r from-red-600 to-fuchsia-700 hover:from-red-500 hover:to-fuchsia-600 text-white font-cyber text-xs font-bold tracking-wider transition cursor-pointer shrink-0">
+            SEND
+          </button>
+        </form>
+        <p class="text-center text-[10px] text-slate-500 mt-1.5">
+          Hawkins Neural AI can answer coding, study, and Stranger Things queries.
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <!-- ===================================================================== -->
+  <!-- API KEY / CEREBRO LINK MODAL                                          -->
+  <!-- ===================================================================== -->
+  <div id="apiKeyModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-[#090312]/88 backdrop-blur-md p-4">
+    <div class="synth-panel max-w-md w-full rounded-2xl p-6 border border-red-500/65 relative">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="font-cyber font-bold text-base sm:text-lg text-white flex items-center gap-2">
+          <span>🔑</span> CEREBRO LINK // API KEY
+        </h2>
+        <button id="closeApiModalBtn" class="text-slate-400 hover:text-white text-xl leading-none cursor-pointer">&times;</button>
+      </div>
+
+      <p class="text-xs text-slate-300 mb-4 leading-relaxed">
+        Paste your <strong class="text-fuchsia-300">Google Gemini API Key</strong> (<code>AIza...</code>) or <strong class="text-cyan-300">OpenAI Key</strong> (<code>sk-...</code>) for custom live AI responses, or leave blank to use built-in Cerebro AI.
+      </p>
+
+      <div class="space-y-4">
+        <div>
+          <label class="block font-cyber text-[11px] text-purple-300 uppercase mb-1.5">AI Engine Provider</label>
+          <select id="apiProviderSelect" class="w-full bg-[#090312] border border-purple-700/70 rounded-xl px-3 py-2.5 text-sm text-white focus:border-red-500 focus:outline-none">
+            <option value="gemini">Google Gemini (gemini-3-flash-preview)</option>
+            <option value="openai">OpenAI Compatible (gpt-4o-mini)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block font-cyber text-[11px] text-purple-300 uppercase mb-1.5">Paste API Key (Optional)</label>
+          <input 
+            type="password" 
+            id="apiKeyInput" 
+            placeholder="AIzaSy... or sk-..." 
+            class="w-full bg-[#090312] border border-purple-700/70 rounded-xl px-3.5 py-2.5 text-sm text-white focus:border-red-500 focus:outline-none"
+          />
+        </div>
+
+        <div>
+          <label class="block font-cyber text-[11px] text-purple-300 uppercase mb-1.5">Active Character Persona</label>
+          <select id="personaSelect" class="w-full bg-[#090312] border border-purple-700/70 rounded-xl px-3 py-2.5 text-sm text-white focus:border-red-500 focus:outline-none">
+            <option value="cerebro">Cerebro AI (Hawkins Mainframe)</option>
+            <option value="eleven">Eleven (011 - Psychic &amp; Direct)</option>
+            <option value="steve">Steve Harrington (Spiked Bat Protector)</option>
+            <option value="dustin">Dusty Bun (Cerebro Radio &amp; Science)</option>
+            <option value="vecna">Vecna (001 - Grandfather Clock Curse)</option>
+            <option value="mindflayer">Demogorgon / The Mind Flayer</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="apiStatusMessage" class="mt-3 text-xs text-emerald-400 hidden"></div>
+
+      <div class="flex items-center justify-end gap-3 mt-6">
+        <button id="removeApiKeyBtn" class="px-4 py-2 rounded-xl border border-purple-700/60 hover:border-red-500 text-xs text-slate-300 hover:text-red-400 transition cursor-pointer">
+          Clear Key
+        </button>
+        <button id="saveApiKeyBtn" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-red-600 to-fuchsia-700 hover:from-red-500 hover:to-fuchsia-600 text-white font-cyber font-bold text-xs tracking-wider shadow-lg transition cursor-pointer">
+          ACTIVATE CEREBRO ⚡
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ALWAYS-VISIBLE FLOATING CHATBOT QUICK-ACCESS BUTTON -->
+  <button id="floatingOpenChatBtn" class="fixed bottom-4 right-4 z-[60] px-4 py-3 rounded-full bg-gradient-to-r from-red-600 via-rose-600 to-fuchsia-600 hover:from-red-500 hover:to-fuchsia-500 text-white font-cyber font-bold text-xs tracking-widest shadow-[0_0_28px_rgba(255,42,26,0.95)] border border-red-300/60 flex items-center gap-2 cursor-pointer transition transform hover:scale-105">
+    <span>💬</span>
+    <span>OPEN CHATBOT</span>
+  </button>
+
+  <!-- ===================================================================== -->
+  <!-- JAVASCRIPT: stranger_things.mp3 ENGINE, 3D CANVAS, 6-CARD SHOWCASE    -->
+  <!-- ===================================================================== -->
+  <script>
+    function safeGetStorage(key, fallback = '') {
+      try { return localStorage.getItem(key) || fallback; } catch (e) { return fallback; }
+    }
+    function safeSetStorage(key, val) {
+      try { localStorage.setItem(key, val); } catch (e) {}
+    }
+    function safeRemoveStorage(key) {
+      try { localStorage.removeItem(key); } catch (e) {}
+    }
+
+    /**
+     * 1. AUDIO ENGINE: Plays uploaded stranger_things.mp3 + Web Audio Synth Fallback & SFX
+     */
+    class StrangerSynthEngine {
+      constructor() {
+        this.ctx = null;
+        this.isPlaying = false;
+        this.isMuted = false;
+        this.intervalId = null;
+        this.themeAudioEl = document.getElementById('strangerThemeAudio');
+        this.usingFallbackSynth = false;
+        this.step = 0;
+        this.notes = [130.81, 164.81, 196.00, 246.94, 261.63, 246.94, 196.00, 164.81];
+      }
+
+      init() {
+        if (!this.ctx) {
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          if (AudioCtx) this.ctx = new AudioCtx();
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      }
+
+      startTheme() {
+        this.init();
+        this.isPlaying = true;
+        const miniEq = document.getElementById('miniEq');
+        if (miniEq && !this.isMuted) miniEq.classList.add('eq-playing');
+
+        if (this.themeAudioEl && !this.usingFallbackSynth) {
+          this.themeAudioEl.muted = this.isMuted;
+          this.themeAudioEl.volume = 0.88;
+          const playPromise = this.themeAudioEl.play();
+          if (playPromise !== undefined) {
+            playPromise.catch(() => {
+              this.usingFallbackSynth = true;
+              this.startFallbackArp();
+            });
+          }
+          return;
+        }
+        this.startFallbackArp();
+      }
+
+      startFallbackArp() {
+        if (this.intervalId) return;
+        this.intervalId = setInterval(() => {
+          if (this.isMuted || !this.ctx) return;
+          this.playArpStep(this.notes[this.step % this.notes.length]);
+          if (this.step % 8 === 0) {
+            this.playSubBass(65.41);
+          }
+          this.step++;
+        }, 175);
+      }
+
+      toggleMute() {
+        this.isMuted = !this.isMuted;
+        const miniEq = document.getElementById('miniEq');
+        if (miniEq) miniEq.classList.toggle('eq-playing', !this.isMuted);
+        if (this.themeAudioEl) {
+          this.themeAudioEl.muted = this.isMuted;
+        }
+        return this.isMuted;
+      }
+
+      playArpStep(freq) {
+        try {
+          const now = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const filter = this.ctx.createBiquadFilter();
+          const gain = this.ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(freq, now);
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(360, now);
+          filter.frequency.exponentialRampToValueAtTime(1650, now + 0.08);
+          gain.gain.setValueAtTime(0.001, now);
+          gain.gain.linearRampToValueAtTime(0.085, now + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.17);
+          osc.connect(filter);
+          filter.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.18);
+        } catch (e) {}
+      }
+
+      playSubBass(freq = 55) {
+        if (this.isMuted) return;
+        this.init();
+        try {
+          const now = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, now);
+          osc.frequency.exponentialRampToValueAtTime(36, now + 1.1);
+          gain.gain.setValueAtTime(0.26, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now);
+          osc.stop(now + 1.25);
+        } catch (e) {}
+      }
+
+      playClockChime() {
+        if (this.isMuted) return;
+        this.init();
+        try {
+          const now = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const osc2 = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(110, now);
+          osc.frequency.exponentialRampToValueAtTime(95, now + 1.9);
+          osc2.type = 'triangle';
+          osc2.frequency.setValueAtTime(220, now);
+          osc2.frequency.exponentialRampToValueAtTime(190, now + 1.5);
+          gain.gain.setValueAtTime(0.3, now);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 2.1);
+          osc.connect(gain);
+          osc2.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now);
+          osc2.start(now);
+          osc.stop(now + 2.15);
+          osc2.stop(now + 2.15);
+        } catch (e) {}
+      }
+
+      playDemogorgonGrowl() {
+        if (this.isMuted) return;
+        this.init();
+        try {
+          const now = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(92, now);
+          osc.frequency.linearRampToValueAtTime(255, now + 0.18);
+          osc.frequency.exponentialRampToValueAtTime(46, now + 0.68);
+          gain.gain.setValueAtTime(0.24, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.7);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.72);
+        } catch (e) {}
+      }
+
+      playZapSfx() {
+        if (this.isMuted) return;
+        this.init();
+        try {
+          const now = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(880, now);
+          osc.frequency.exponentialRampToValueAtTime(140, now + 0.18);
+          gain.gain.setValueAtTime(0.11, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.19);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.2);
+        } catch (e) {}
+      }
+    }
+
+    const synth = new StrangerSynthEngine();
+
+    /**
+     * 2. 3D PERSPECTIVE SYNTHWAVE GRID + SILHOUETTE CLIFFS + FLOATING SPORES + VINES
+     */
+    const canvas = document.getElementById('synthwaveCanvas');
+    const ctx = canvas.getContext('2d');
+    let spores = [];
+    let lightningBolts = [];
+    let gridOffset = 0;
+    let vinePulse = 0;
+    let redScreenPulse = 0;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class Spore {
+      constructor() { this.reset(); }
+      reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.r = Math.random() * 2.8 + 0.7;
+        this.vx = (Math.random() - 0.5) * 0.7;
+        this.vy = -(Math.random() * 0.6 + 0.15);
+        this.alpha = Math.random() * 0.75 + 0.2;
+        this.hue = Math.random() > 0.45 ? '#ff2a1a' : '#f472b6';
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.y < -10 || this.x < -10 || this.x > canvas.width + 10) {
+          this.reset();
+          this.y = canvas.height + 5;
+        }
+      }
+      draw() {
+        ctx.save();
+        ctx.globalAlpha = this.alpha;
+        ctx.fillStyle = this.hue;
+        ctx.shadowBlur = 12;
+        ctx.shadowColor = this.hue;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    for (let i = 0; i < 115; i++) spores.push(new Spore());
+
+    function spawnLightningBolt() {
+      const startX = Math.random() * canvas.width;
+      const segments = [];
+      let cx = startX;
+      let cy = 0;
+      const horizonY = canvas.height * 0.62;
+      while (cy < horizonY) {
+        const nx = cx + (Math.random() - 0.5) * 95;
+        const ny = cy + Math.random() * 42 + 18;
+        segments.push({ x1: cx, y1: cy, x2: nx, y2: ny });
+        cx = nx;
+        cy = ny;
+      }
+      lightningBolts.push({ segments, life: 1.0 });
+    }
+
+    function drawSynthwaveScene(time) {
+      const w = canvas.width;
+      const h = canvas.height;
+      const horizonY = h * 0.62;
+
+      ctx.clearRect(0, 0, w, h);
+
+      // Crimson-Magenta Horizon Glow
+      const horizonGlow = ctx.createRadialGradient(w * 0.5, horizonY, 10, w * 0.5, horizonY, w * 0.55);
+      horizonGlow.addColorStop(0, 'rgba(255, 42, 26, 0.38)');
+      horizonGlow.addColorStop(0.5, 'rgba(217, 70, 239, 0.18)');
+      horizonGlow.addColorStop(1, 'rgba(9, 3, 18, 0)');
+      ctx.fillStyle = horizonGlow;
+      ctx.fillRect(0, 0, w, horizonY);
+
+      // Distant Silhouette Ridges
+      ctx.save();
+      ctx.fillStyle = 'rgba(7, 2, 14, 0.82)';
+      ctx.beginPath();
+      ctx.moveTo(0, horizonY);
+      const ridgeSteps = 18;
+      for (let i = 0; i <= ridgeSteps; i++) {
+        const rx = (w / ridgeSteps) * i;
+        const peak = Math.sin(i * 1.35) * 28 + Math.cos(i * 2.4) * 18 + 26;
+        ctx.lineTo(rx, horizonY - peak);
+      }
+      ctx.lineTo(w, horizonY);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+
+      // 3D Perspective Synthwave Grid Floor
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(0, horizonY, w, h - horizonY);
+      ctx.clip();
+
+      ctx.fillStyle = 'rgba(18, 5, 34, 0.55)';
+      ctx.fillRect(0, horizonY, w, h - horizonY);
+
+      ctx.strokeStyle = '#ff2a1a';
+      ctx.lineWidth = 2.5;
+      ctx.shadowBlur = 18;
+      ctx.shadowColor = '#ff2a1a';
+      ctx.beginPath();
+      ctx.moveTo(0, horizonY);
+      ctx.lineTo(w, horizonY);
+      ctx.stroke();
+
+      const vpX = w * 0.5;
+      const numVLines = 26;
+      ctx.lineWidth = 1.3;
+      for (let i = -numVLines; i <= numVLines; i++) {
+        const spread = i / numVLines;
+        const bottomX = vpX + spread * w * 1.65;
+        ctx.strokeStyle = Math.abs(i) % 3 === 0 ? 'rgba(255, 42, 26, 0.52)' : 'rgba(217, 70, 239, 0.36)';
+        ctx.beginPath();
+        ctx.moveTo(vpX + spread * 40, horizonY);
+        ctx.lineTo(bottomX, h);
+        ctx.stroke();
+      }
+
+      gridOffset = (gridOffset + 0.016) % 1;
+      const numHLines = 16;
+      for (let i = 0; i < numHLines; i++) {
+        const t = (i + gridOffset) / numHLines;
+        const y = horizonY + Math.pow(t, 2.25) * (h - horizonY);
+        ctx.strokeStyle = `rgba(255, 42, 26, ${0.15 + t * 0.55})`;
+        ctx.lineWidth = 1 + t * 1.4;
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(w, y);
+        ctx.stroke();
+      }
+      ctx.restore();
+
+      // Lightning Bolts
+      if (Math.random() < 0.014) spawnLightningBolt();
+      for (let i = lightningBolts.length - 1; i >= 0; i--) {
+        const b = lightningBolts[i];
+        ctx.save();
+        ctx.strokeStyle = `rgba(255, 65, 50, ${b.life})`;
+        ctx.shadowBlur = 24;
+        ctx.shadowColor = '#ff2a1a';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        b.segments.forEach(s => {
+          ctx.moveTo(s.x1, s.y1);
+          ctx.lineTo(s.x2, s.y2);
+        });
+        ctx.stroke();
+        ctx.restore();
+        b.life -= 0.085;
+        if (b.life <= 0) lightningBolts.splice(i, 1);
+      }
+
+      // Creeping Corner Vines
+      const reach = 85 + Math.sin(time * 0.002) * 16 + vinePulse * 95;
+      vinePulse *= 0.93;
+      ctx.save();
+      ctx.strokeStyle = 'rgba(190, 18, 60, 0.48)';
+      ctx.shadowBlur = 12;
+      ctx.shadowColor = '#ff2a1a';
+      ctx.lineWidth = 2.5;
+      for (let i = 0; i < 4; i++) {
+        ctx.beginPath();
+        ctx.moveTo(0, i * 24);
+        ctx.bezierCurveTo(
+          reach * 0.45, i * 28 + Math.sin(time * 0.003 + i) * 20,
+          reach * 0.75, i * 16 - Math.cos(time * 0.002 + i) * 22,
+          reach, i * 32 + 12
+        );
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(w, h - i * 24);
+        ctx.bezierCurveTo(
+          w - reach * 0.45, h - i * 28,
+          w - reach * 0.75, h - i * 16,
+          w - reach, h - i * 32 - 12
+        );
+        ctx.stroke();
+      }
+      ctx.restore();
+
+      for (const s of spores) {
+        s.update();
+        s.draw();
+      }
+
+      if (redScreenPulse > 0.01) {
+        ctx.fillStyle = `rgba(225, 29, 72, ${redScreenPulse * 0.36})`;
+        ctx.fillRect(0, 0, w, h);
+        redScreenPulse *= 0.92;
+      }
+
+      requestAnimationFrame(drawSynthwaveScene);
+    }
+    requestAnimationFrame(drawSynthwaveScene);
+
+    /**
+     * 3. BYERS HANGING CHRISTMAS LIGHTS WALL BUILDER
+     */
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+    const bulbColors = ['#ff2a1a', '#00f0ff', '#ffbe0b', '#10b981', '#ec4899', '#d946ef'];
+    const christmasWall = document.getElementById('christmasWall');
+    const wallBulbs = {};
+
+    alphabet.forEach((letter, idx) => {
+      const color = bulbColors[idx % bulbColors.length];
+      const cell = document.createElement('div');
+      cell.className = 'bulb-hanger flex flex-col items-center gap-0.5';
+      cell.style.animationDelay = `${(idx % 5) * 0.32}s`;
+      cell.innerHTML = `
+        <div id="bulb-${letter}" class="bulb" style="background-color: ${color}; color: ${color};"></div>
+        <span class="font-serif font-bold text-xs text-slate-300">${letter}</span>
+      `;
+      christmasWall.appendChild(cell);
+      wallBulbs[letter] = document.getElementById(`bulb-${letter}`);
+    });
+
+    const headerLightsStrip = document.getElementById('headerLightsStrip');
+    const liveWallTransmission = document.getElementById('liveWallTransmission');
+    const headerAlphaBulbs = {};
+    const headerBulbList = [];
+
+    alphabet.forEach((letter, idx) => {
+      const color = bulbColors[idx % bulbColors.length];
+      const item = document.createElement('div');
+      item.className = 'bulb-hanger flex flex-col items-center';
+      item.style.animationDelay = `${(idx % 6) * 0.28}s`;
+      item.innerHTML = `
+        <div id="chat-bulb-${letter}" class="bulb !w-2.5 !h-3.5" style="background-color: ${color}; color: ${color};"></div>
+        <span class="font-serif font-bold text-[9px] sm:text-[10px] text-slate-300 leading-tight mt-0.5">${letter}</span>
+      `;
+      headerLightsStrip.appendChild(item);
+      const bEl = document.getElementById(`chat-bulb-${letter}`);
+      headerAlphaBulbs[letter] = bEl;
+      headerBulbList.push(bEl);
+    });
+
+    let isSpellingMessage = false;
+
+    setInterval(() => {
+      if (isSpellingMessage || headerBulbList.length === 0) return;
+      const randomBulb = headerBulbList[Math.floor(Math.random() * headerBulbList.length)];
+      if (randomBulb) {
+        randomBulb.classList.add('lit');
+        setTimeout(() => randomBulb.classList.remove('lit'), 400);
+      }
+    }, 260);
+
+    function flashSingleWallLetter(char) {
+      const upper = char.toUpperCase();
+      if (headerAlphaBulbs[upper]) {
+        const b = headerAlphaBulbs[upper];
+        b.classList.add('lit');
+        if (liveWallTransmission) liveWallTransmission.textContent = `SIGNAL: ${upper}`;
+        setTimeout(() => b.classList.remove('lit'), 320);
+      }
+    }
+
+    function spellOnChatWall(text) {
+      const cleanLetters = text.toUpperCase().replace(/[^A-Z]/g, '').slice(0, 18).split('');
+      if (cleanLetters.length === 0) return;
+      isSpellingMessage = true;
+      if (liveWallTransmission) liveWallTransmission.textContent = '';
+
+      cleanLetters.forEach((char, index) => {
+        setTimeout(() => {
+          headerBulbList.forEach(b => b.classList.remove('lit'));
+          if (headerAlphaBulbs[char]) headerAlphaBulbs[char].classList.add('lit');
+          if (liveWallTransmission) {
+            liveWallTransmission.textContent = (liveWallTransmission.textContent + char).slice(-14);
+          }
+
+          if (index === cleanLetters.length - 1) {
+            setTimeout(() => {
+              headerBulbList.forEach(b => b.classList.remove('lit'));
+              isSpellingMessage = false;
+            }, 400);
+          }
+        }, index * 125);
+      });
+    }
+
+    function triggerLightBlinkStorm(targetBulbs = headerBulbList) {
+      isSpellingMessage = true;
+      if (liveWallTransmission) liveWallTransmission.textContent = 'BLINK SURGE!!';
+      synth.playZapSfx();
+      for (let wave = 0; wave < 6; wave++) {
+        setTimeout(() => {
+          targetBulbs.forEach((b, i) => {
+            if ((i + wave) % 2 === 0) b.classList.add('lit');
+            else b.classList.remove('lit');
+          });
+        }, wave * 130);
+      }
+      setTimeout(() => {
+        targetBulbs.forEach(b => b.classList.remove('lit'));
+        isSpellingMessage = false;
+        if (liveWallTransmission) liveWallTransmission.textContent = 'READY';
+      }, 840);
+    }
+
+    document.getElementById('blinkStormBtn').addEventListener('click', () => triggerLightBlinkStorm(headerBulbList));
+    document.getElementById('stage2LightStormBtn').addEventListener('click', () => triggerLightBlinkStorm(Object.values(wallBulbs)));
+    document.getElementById('lightningSurgeBtn')?.addEventListener('click', () => {
+      triggerShockwaveEffect();
+      spawnLightningBolt();
+      synth.playZapSfx();
+    });
+
+    const synthBarsContainer = document.getElementById('synthBars');
+    for (let i = 0; i < 24; i++) {
+      const bar = document.createElement('div');
+      bar.className = 'w-1.5 sm:w-2 bg-gradient-to-t from-red-600 via-orange-500 to-fuchsia-400 rounded-full transition-all duration-150 shadow-[0_0_10px_rgba(255,42,26,0.65)]';
+      bar.style.height = '12px';
+      synthBarsContainer.appendChild(bar);
+    }
+
+    /**
+     * 4. 6-CHARACTER ANIMATED PHOTO SHOWCASE (USING USER'S EXACT UPLOADED IMAGES)
+     */
+    const showcaseCharacters = [
+      {
+        id: 'demogorgon',
+        personaKey: 'mindflayer',
+        name: 'DEMOGORGON',
+        tag: 'APEX RIFT PREDATOR',
+        imgSrc: 'image_cd5218.jpg',
+        imgStyle: 'object-position: 38% 35%;',
+        imgAnimClass: 'anim-img-demogorgon',
+        accent: 'from-red-600 via-rose-600 to-fuchsia-800',
+        border: 'border-red-500/90 shadow-[0_0_32px_rgba(255,42,26,0.7)]',
+        quote: '*Crimson Forest Roar*',
+        overlayHtml: `
+          <div class="absolute inset-0 bg-gradient-to-t from-[#090312] via-transparent to-red-900/25"></div>
+          <svg viewBox="0 0 100 100" class="absolute inset-0 w-full h-full pointer-events-none opacity-80">
+            <line x1="15" y1="20" x2="85" y2="75" stroke="#ff2a1a" stroke-width="2" stroke-dasharray="18 80" />
+            <line x1="25" y1="12" x2="92" y2="65" stroke="#fb7185" stroke-width="1.5" stroke-dasharray="22 80" />
+          </svg>
+        `
+      },
+      {
+        id: 'eleven',
+        personaKey: 'eleven',
+        name: 'ELEVEN (011)',
+        tag: 'PSIONIC TELEKINESIS',
+        imgSrc: 'image_cd5278.png',
+        imgStyle: 'object-position: 50% 15%;',
+        imgAnimClass: 'anim-img-eleven',
+        accent: 'from-pink-500 to-cyan-500',
+        border: 'border-pink-400/90 shadow-[0_0_30px_rgba(236,72,153,0.65)]',
+        quote: 'Friends don’t lie.',
+        overlayHtml: `
+          <div class="psychic-ring-fx"></div>
+          <div class="psychic-ring-fx" style="animation-delay: 0.8s; border-color: #ec4899;"></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-[#090312] via-transparent to-pink-500/15"></div>
+        `
+      },
+      {
+        id: 'steve',
+        personaKey: 'steve',
+        name: 'STEVE HARRINGTON',
+        tag: 'SPIKED BAT PROTECTOR',
+        imgSrc: 'image_cd555a.jpg',
+        imgStyle: 'object-position: 22% 18%;',
+        imgAnimClass: 'anim-img-steve',
+        accent: 'from-blue-500 to-amber-500',
+        border: 'border-amber-400/90 shadow-[0_0_30px_rgba(251,191,36,0.6)]',
+        quote: 'Ahoy! Spiked Bat Ready.',
+        overlayHtml: `
+          <div class="bat-slash-fx"></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-[#090312] via-transparent to-amber-500/15"></div>
+        `
+      },
+      {
+        id: 'dustibun',
+        personaKey: 'dustin',
+        name: 'DUSTY BUN',
+        tag: 'CEREBRO RADAR TOWER',
+        imgSrc: 'image_cd555a.jpg',
+        imgStyle: 'object-position: 82% 28%;',
+        imgAnimClass: 'anim-img-dustin',
+        accent: 'from-emerald-500 to-cyan-500',
+        border: 'border-emerald-400/90 shadow-[0_0_30px_rgba(16,185,129,0.6)]',
+        quote: 'Code Red! Do you copy?!',
+        overlayHtml: `
+          <div class="cerebro-radar-fx"></div>
+          <div class="cerebro-radar-fx" style="animation-delay: 0.9s; border-color: #06b6d4;"></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-[#090312] via-transparent to-emerald-500/15"></div>
+        `
+      },
+      {
+        id: 'vecna',
+        personaKey: 'vecna',
+        name: 'VECNA (001)',
+        tag: 'CURSE OF THE CLOCK',
+        imgSrc: 'image_cd5597.jpg',
+        imgStyle: 'object-position: 50% 15%;',
+        imgAnimClass: 'anim-img-vecna',
+        accent: 'from-red-700 to-fuchsia-900',
+        border: 'border-fuchsia-500 shadow-[0_0_34px_rgba(217,70,239,0.75)]',
+        quote: 'Four chimes... time is up.',
+        overlayHtml: `
+          <div class="vecna-pendulum-fx absolute top-0 left-1/2 w-0.5 h-20 bg-amber-300/70 shadow-[0_0_10px_#fbbf24]">
+            <div class="w-3 h-3 rounded-full bg-amber-400 -ml-1.5 mt-20"></div>
+          </div>
+          <div class="absolute inset-0 bg-gradient-to-t from-[#090312] via-transparent to-rose-900/30"></div>
+        `
+      },
+      {
+        id: 'mindflayer',
+        personaKey: 'mindflayer',
+        name: 'THE MIND FLAYER',
+        tag: 'STARCOURT SHADOW TITAN',
+        imgSrc: 'image_cd55d6.jpg',
+        imgStyle: 'object-position: 50% 35%;',
+        imgAnimClass: 'anim-img-mindflayer',
+        accent: 'from-blue-600 via-purple-600 to-red-600',
+        border: 'border-blue-400/90 shadow-[0_0_34px_rgba(59,130,246,0.7)]',
+        quote: 'We are building it for you.',
+        overlayHtml: `
+          <div class="absolute inset-0 bg-gradient-to-t from-[#090312] via-transparent to-blue-600/20"></div>
+        `
+      }
+    ];
+
+    /**
+     * 5. CINEMATIC SEQUENCE CONTROLLER (0s -> 5s Rift Flythrough -> Shockwave -> 6-Card Showcase)
+     */
+    const startGate = document.getElementById('startGate');
+    const cinematicStage = document.getElementById('cinematicStage');
+    const phaseOneTitle = document.getElementById('phaseOneTitle');
+    const phaseTwoShowcase = document.getElementById('phaseTwoShowcase');
+    const characterStage = document.getElementById('characterStage');
+    const timerBadge = document.getElementById('timerBadge');
+    const sequencePhaseLabel = document.getElementById('sequencePhaseLabel');
+    const introProgressBar = document.getElementById('introProgressBar');
+    const wallDecodedWord = document.getElementById('wallDecodedWord');
+    const breachCountdownText = document.getElementById('breachCountdownText');
+    const chargePercentText = document.getElementById('chargePercentText');
+    const riftChargeFill = document.getElementById('riftChargeFill');
+
+    let sequenceTimers = [];
+    let barAnimInterval = null;
+
+    function clearSequenceTimers() {
+      sequenceTimers.forEach(t => clearTimeout(t));
+      sequenceTimers = [];
+      if (barAnimInterval) clearInterval(barAnimInterval);
+    }
+
+    function triggerShockwaveEffect() {
+      const wave = document.createElement('div');
+      wave.className = 'shockwave-ring';
+      document.body.appendChild(wave);
+      setTimeout(() => wave.remove(), 1000);
+    }
+
+    function finishIntroAndEnterChat() {
+      clearSequenceTimers();
+      triggerShockwaveEffect();
+      cinematicStage.classList.add('hidden');
+      cinematicStage.classList.remove('flex');
+      startGate.classList.add('hidden');
+      chatbotApp.classList.remove('hidden');
+      chatbotApp.classList.add('flex');
+      const floatBtn = document.getElementById('floatingOpenChatBtn');
+      if (floatBtn) floatBtn.classList.add('hidden');
+      setTimeout(() => {
+        if (userInput) userInput.focus();
+      }, 150);
+    }
+
+    function blinkWordOnWall(word) {
+      const letters = word.split('');
+      wallDecodedWord.textContent = '';
+      letters.forEach((char, index) => {
+        const t = setTimeout(() => {
+          Object.values(wallBulbs).forEach(b => b.classList.remove('lit'));
+          if (wallBulbs[char]) {
+            wallBulbs[char].classList.add('lit');
+            synth.playZapSfx();
+          }
+          wallDecodedWord.textContent += char + ' ';
+        }, index * 200);
+        sequenceTimers.push(t);
+      });
+    }
+
+    function runCinematicIntro() {
+      clearSequenceTimers();
+      startGate.classList.add('hidden');
+      chatbotApp.classList.add('hidden');
+      chatbotApp.classList.remove('flex');
+      const floatBtn = document.getElementById('floatingOpenChatBtn');
+      if (floatBtn) floatBtn.classList.remove('hidden');
+      cinematicStage.classList.remove('hidden');
+      cinematicStage.classList.add('flex');
+
+      phaseOneTitle.classList.remove('hidden', 'glitch-active');
+      phaseOneTitle.classList.add('flex');
+      phaseTwoShowcase.classList.add('hidden');
+      phaseTwoShowcase.classList.remove('flex');
+      characterStage.innerHTML = '';
+      sequencePhaseLabel.textContent = '0.0s–5.0s // DIMENSIONAL RIFT FLYTHROUGH';
+      riftChargeFill.style.width = '0%';
+
+      synth.startTheme();
+      spawnLightningBolt();
+
+      const bars = synthBarsContainer.children;
+      barAnimInterval = setInterval(() => {
+        for (let b of bars) {
+          b.style.height = `${Math.floor(Math.random() * 44) + 8}px`;
+        }
+      }, 140);
+
+      const totalDuration = 16000;
+      const startTime = Date.now();
+
+      const progressTimer = setInterval(() => {
+        const elapsed = Date.now() - startTime;
+        const pct = Math.min((elapsed / totalDuration) * 100, 100);
+        introProgressBar.style.width = `${pct}%`;
+
+        if (elapsed <= 5000) {
+          const rem = Math.ceil((5000 - elapsed) / 1000);
+          const chargePct = Math.min(Math.round((elapsed / 5000) * 100), 100);
+          timerBadge.textContent = `00:0${Math.max(rem, 0)}`;
+          breachCountdownText.textContent = rem > 0 ? `BREACHING RIFT IN ${rem}...` : 'RIFT BREACHED!!';
+          chargePercentText.textContent = `${chargePct}%`;
+          riftChargeFill.style.width = `${chargePct}%`;
+        } else {
+          timerBadge.textContent = 'RIFT OPEN';
+        }
+
+        if (elapsed >= totalDuration) {
+          clearInterval(progressTimer);
+          finishIntroAndEnterChat();
+        }
+      }, 60);
+      sequenceTimers.push(progressTimer);
+
+      // 4.4s Glitch Warning
+      sequenceTimers.push(setTimeout(() => {
+        phaseOneTitle.classList.add('glitch-active');
+        synth.playZapSfx();
+      }, 4400));
+
+      // 5.0s Dimensional Shockwave + 6-Character Photo Stage + Light Blinks Storm
+      sequenceTimers.push(setTimeout(() => {
+        triggerShockwaveEffect();
+        spawnLightningBolt();
+        spawnLightningBolt();
+        redScreenPulse = 0.85;
+        phaseOneTitle.classList.add('hidden');
+        phaseOneTitle.classList.remove('flex');
+        phaseTwoShowcase.classList.remove('hidden');
+        phaseTwoShowcase.classList.add('flex');
+        sequencePhaseLabel.textContent = '5.0s // 6-CHARACTER PARALLAX SHOWCASE';
+
+        blinkWordOnWall('RUN');
+        sequenceTimers.push(setTimeout(() => triggerLightBlinkStorm(Object.values(wallBulbs)), 1100));
+
+        showcaseCharacters.forEach((char, idx) => {
+          const cardTimer = setTimeout(() => {
+            if (char.id === 'vecna') synth.playClockChime();
+            else if (char.id === 'demogorgon') synth.playDemogorgonGrowl();
+            else if (char.id === 'mindflayer') synth.playSubBass(48);
+            else synth.playZapSfx();
+
+            const card = document.createElement('div');
+            card.className = `showcase-card rounded-2xl bg-[#090312]/95 border ${char.border} overflow-hidden flex flex-col justify-between relative cursor-pointer group`;
+            card.innerHTML = `
+              <div class="w-full h-1 bg-gradient-to-r ${char.accent} absolute top-0 left-0 z-20"></div>
+              <div class="relative w-full h-36 sm:h-44 overflow-hidden bg-black">
+                <img src="${char.imgSrc}" alt="${char.name}" style="${char.imgStyle}" class="w-full h-full object-cover ${char.imgAnimClass}" onerror="this.style.opacity='0.2'" />
+                ${char.overlayHtml}
+                <span class="absolute top-2 left-2 z-20 px-2 py-0.5 rounded bg-[#090312]/80 border border-white/15 font-cyber text-[8px] tracking-widest text-purple-200 uppercase">
+                  ${char.tag}
+                </span>
+              </div>
+              <div class="p-2.5 sm:p-3 text-center relative z-20 bg-[#090312]">
+                <h3 class="font-cyber font-bold text-xs sm:text-sm text-white tracking-wider">${char.name}</h3>
+                <p class="text-[11px] text-purple-200/80 italic mt-0.5">"${char.quote}"</p>
+                <span class="inline-block mt-1.5 px-2.5 py-0.5 rounded-full bg-red-600/25 border border-red-500/50 text-[9px] font-cyber text-red-300 group-hover:bg-red-600 group-hover:text-white transition">
+                  CHAT WITH ${char.name} &gt;
+                </span>
+              </div>
+            `;
+            card.addEventListener('click', (e) => {
+              e.stopPropagation();
+              spawnLightningBolt();
+              if (char.id === 'vecna') synth.playClockChime();
+              else if (char.id === 'demogorgon') synth.playDemogorgonGrowl();
+              else if (char.id === 'mindflayer') synth.playSubBass(48);
+              else synth.playZapSfx();
+
+              applyCharacterTheme(char.personaKey, true);
+              safeSetStorage('strangerbot_persona', char.personaKey);
+              finishIntroAndEnterChat();
+              appendMessage('bot', `⚡ **${char.name}** connected to Hawkins Chat Terminal! "${char.quote}" — Ask me anything below!`, char.personaKey, true);
+            });
+            characterStage.appendChild(card);
+          }, idx * 700);
+          sequenceTimers.push(cardTimer);
+        });
+      }, 5000));
+    }
+
+    document.getElementById('launchSequenceBtn').addEventListener('click', runCinematicIntro);
+    document.getElementById('skipToChatDirectBtn').addEventListener('click', () => {
+      synth.startTheme();
+      finishIntroAndEnterChat();
+    });
+    document.getElementById('floatingOpenChatBtn').addEventListener('click', () => {
+      synth.startTheme();
+      finishIntroAndEnterChat();
+    });
+    document.getElementById('skipIntroBtn').addEventListener('click', finishIntroAndEnterChat);
+    document.getElementById('enterChatHeroBtn').addEventListener('click', finishIntroAndEnterChat);
+    document.getElementById('replayIntroBtn').addEventListener('click', () => {
+      closeMobileSidebar();
+      runCinematicIntro();
+    });
+    document.getElementById('stage2ReplayBtn').addEventListener('click', runCinematicIntro);
+
+    document.getElementById('toggleAudioBtn').addEventListener('click', () => {
+      if (!synth.isPlaying) {
+        synth.startTheme();
+        document.getElementById('audioIcon').textContent = '🔊';
+        return;
+      }
+      const muted = synth.toggleMute();
+      document.getElementById('audioIcon').textContent = muted ? '🔇' : '🔊';
+    });
+
+    // Mobile Sidebar Drawer Controls
+    const chatSidebar = document.getElementById('chatSidebar');
+    const mobileSidebarOverlay = document.getElementById('mobileSidebarOverlay');
+    function openMobileSidebar() {
+      if (chatSidebar) {
+        chatSidebar.classList.remove('hidden');
+        chatSidebar.classList.add('flex');
+      }
+      if (mobileSidebarOverlay) mobileSidebarOverlay.classList.remove('hidden');
+    }
+    function closeMobileSidebar() {
+      if (chatSidebar && window.innerWidth < 768) {
+        chatSidebar.classList.add('hidden');
+        chatSidebar.classList.remove('flex');
+      }
+      if (mobileSidebarOverlay) mobileSidebarOverlay.classList.add('hidden');
+    }
+    document.getElementById('openMobileSidebarBtn')?.addEventListener('click', openMobileSidebar);
+    document.getElementById('closeMobileSidebarBtn')?.addEventListener('click', closeMobileSidebar);
+    mobileSidebarOverlay?.addEventListener('click', closeMobileSidebar);
+
+    /**
+     * 6. PERSONA SWITCHER, LIVE AMBIENT BACKDROP & TERMINAL THEME
+     */
+    const chatbotApp = document.getElementById('chatbotApp');
+    const ambientBackdrop = document.getElementById('ambientCharacterBackdrop');
+    const activeHeaderAvatar = document.getElementById('activeHeaderAvatar');
+    const headerPersonaSelect = document.getElementById('headerPersonaSelect');
+    const personaSelect = document.getElementById('personaSelect');
+    let activePersona = safeGetStorage('strangerbot_persona', 'cerebro');
+
+    const personaConfigs = {
+      cerebro: {
+        img: 'image_cd55d6.jpg',
+        imgStyle: 'object-position: 50% 35%;',
+        name: 'CEREBRO AI // HAWKINS MAINFRAME',
+        system: 'You are the Hawkins National Laboratory Cerebro AI Neural Terminal inspired by Stranger Things. Be sharp, futuristic, and helpful while occasionally referencing dimensional sensors and 1980s Hawkins lore.'
+      },
+      eleven: {
+        img: 'image_cd5278.png',
+        imgStyle: 'object-position: 50% 15%;',
+        name: 'ELEVEN (JANE HOPPER - 011)',
+        system: 'You are Eleven (011) from Stranger Things. Speak concisely, empathetically, and powerfully. Mention Eggos, friends never lying, and psychic energy when fitting, while giving super accurate answers.'
+      },
+      steve: {
+        img: 'image_cd555a.jpg',
+        imgStyle: 'object-position: 22% 18%;',
+        name: 'STEVE HARRINGTON',
+        system: 'You are Steve Harrington from Stranger Things. Be protective, confident, witty, occasionally mention Scoops Ahoy, your spiked nail-bat, or hair care, while still being genuinely helpful.'
+      },
+      dustin: {
+        img: 'image_cd555a.jpg',
+        imgStyle: 'object-position: 82% 28%;',
+        name: 'DUSTIN // DUSTY BUN',
+        system: 'You are Dustin Henderson (Dusty Bun) from Stranger Things. Speak with scientific enthusiasm, mention Cerebro radio frequencies, Dungeons & Dragons lore, and Mr. Clarke\'s science rules while giving smart answers.'
+      },
+      vecna: {
+        img: 'image_cd5597.jpg',
+        imgStyle: 'object-position: 50% 15%;',
+        name: 'VECNA // HENRY CREEL (001)',
+        system: 'You are Vecna (001) from Stranger Things. Speak in a calm, theatrical, ominous tone referencing time, grandfather clocks, and the Upside Down Hive Mind, while giving brilliant, detailed answers.'
+      },
+      mindflayer: {
+        img: 'image_cd5218.jpg',
+        imgStyle: 'object-position: 38% 35%;',
+        name: 'DEMOGORGON & THE MIND FLAYER',
+        system: 'You are the Hive Mind intelligence of the Demogorgon and The Mind Flayer from the Upside Down. Speak with dark, cosmic intensity while still answering the user\'s question clearly and helpfully.'
+      }
+    };
+
+    function applyCharacterTheme(themeVal, withGlitch = false) {
+      activePersona = personaConfigs[themeVal] ? themeVal : 'cerebro';
+      const meta = personaConfigs[activePersona];
+
+      document.body.classList.remove('theme-cerebro', 'theme-eleven', 'theme-dustin', 'theme-steve', 'theme-vecna', 'theme-mindflayer');
+      document.body.classList.add(`theme-${activePersona}`);
+
+      if (ambientBackdrop) {
+        ambientBackdrop.src = meta.img;
+        ambientBackdrop.setAttribute('style', meta.imgStyle);
+      }
+      if (activeHeaderAvatar) {
+        activeHeaderAvatar.src = meta.img;
+        activeHeaderAvatar.setAttribute('style', meta.imgStyle);
+      }
+      if (headerPersonaSelect) headerPersonaSelect.value = activePersona;
+      if (personaSelect) personaSelect.value = activePersona;
+
+      if (withGlitch) {
+        chatbotApp.classList.add('glitch-active');
+        setTimeout(() => chatbotApp.classList.remove('glitch-active'), 340);
+        if (activePersona === 'vecna') {
+          redScreenPulse = 0.85;
+          synth.playClockChime();
+        } else if (activePersona === 'mindflayer') {
+          redScreenPulse = 0.85;
+          synth.playDemogorgonGrowl();
+        } else {
+          synth.playZapSfx();
+        }
+      }
+    }
+
+    headerPersonaSelect?.addEventListener('change', (e) => {
+      const val = e.target.value;
+      applyCharacterTheme(val, true);
+      safeSetStorage('strangerbot_persona', val);
+    });
+
+    /**
+     * 7. API KEY / CEREBRO LINK MODAL MANAGEMENT
+     */
+    const apiKeyModal = document.getElementById('apiKeyModal');
+    const apiKeyInput = document.getElementById('apiKeyInput');
+    const apiProviderSelect = document.getElementById('apiProviderSelect');
+    const apiModeBadge = document.getElementById('apiModeBadge');
+    const apiStatusMessage = document.getElementById('apiStatusMessage');
+
+    function updateApiBadge() {
+      const savedKey = safeGetStorage('strangerbot_api_key', '').trim();
+      if (apiModeBadge) {
+        if (savedKey) {
+          apiModeBadge.textContent = 'CUSTOM AI ⚡';
+          apiModeBadge.className = 'hidden sm:inline-block text-[10px] font-cyber px-2 py-0.5 rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-500/40';
+        } else {
+          apiModeBadge.textContent = 'CEREBRO AI ⚡';
+          apiModeBadge.className = 'hidden sm:inline-block text-[10px] font-cyber px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/40';
+        }
+      }
+    }
+
+    document.getElementById('openApiModalBtn').addEventListener('click', () => {
+      apiKeyInput.value = safeGetStorage('strangerbot_api_key', '');
+      apiProviderSelect.value = safeGetStorage('strangerbot_provider', 'gemini');
+      personaSelect.value = activePersona;
+      apiStatusMessage.classList.add('hidden');
+      apiKeyModal.classList.remove('hidden');
+      apiKeyModal.classList.add('flex');
+    });
+
+    document.getElementById('closeApiModalBtn').addEventListener('click', () => {
+      apiKeyModal.classList.add('hidden');
+      apiKeyModal.classList.remove('flex');
+    });
+
+    document.getElementById('saveApiKeyBtn').addEventListener('click', () => {
+      const key = apiKeyInput.value.trim();
+      const detectedProvider = key.startsWith('sk-') ? 'openai' : (key.startsWith('AIza') ? 'gemini' : apiProviderSelect.value);
+      apiProviderSelect.value = detectedProvider;
+      const chosenPersona = personaSelect.value;
+      safeSetStorage('strangerbot_api_key', key);
+      safeSetStorage('strangerbot_provider', detectedProvider);
+      safeSetStorage('strangerbot_persona', chosenPersona);
+      applyCharacterTheme(chosenPersona, true);
+      updateApiBadge();
+
+      apiStatusMessage.textContent = key ? `✅ Cerebro Link connected! Live ${detectedProvider.toUpperCase()} AI active.` : '✅ Built-in Cerebro Neural AI active.';
+      apiStatusMessage.classList.remove('hidden');
+      setTimeout(() => {
+        apiStatusMessage.classList.add('hidden');
+        apiKeyModal.classList.add('hidden');
+        apiKeyModal.classList.remove('flex');
+      }, 750);
+    });
+
+    document.getElementById('removeApiKeyBtn').addEventListener('click', () => {
+      safeRemoveStorage('strangerbot_api_key');
+      apiKeyInput.value = '';
+      updateApiBadge();
+      apiStatusMessage.textContent = 'Custom Key cleared — Using Built-in Cerebro AI.';
+      apiStatusMessage.classList.remove('hidden');
+    });
+
+    /**
+     * 8. CLEAN CHATGPT-STYLE CHATBOT ENGINE + SECRET EASTER EGG TRIGGERS
+     */
+    const chatContainer = document.getElementById('chatContainer');
+    const chatForm = document.getElementById('chatForm');
+    const userInput = document.getElementById('userInput');
+    const chatHistoryList = document.getElementById('chatHistoryList');
+
+    let chatSessions = [];
+    let currentSessionId = null;
+
+    userInput.addEventListener('input', (e) => {
+      const val = e.target.value;
+      if (val.length > 0) flashSingleWallLetter(val[val.length - 1]);
+    });
+
+    function createNewChatSession(resetDom = true) {
+      const id = 'chat_' + Date.now();
+      chatSessions.unshift({
+        id,
+        title: 'New Hawkins Chat',
+        messages: []
+      });
+      currentSessionId = id;
+      renderChatHistorySidebar();
+      if (resetDom && chatContainer) {
+        document.body.classList.remove('upside-down-flipped');
+        chatContainer.innerHTML = `
+          <div id="chatGptWelcomeHero" class="h-full flex flex-col items-center justify-center text-center py-6">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-red-600 to-purple-950 border border-red-400/70 overflow-hidden shadow-[0_0_20px_rgba(255,42,26,0.45)] mb-3">
+              <img src="image_cd55d6.jpg" alt="Hawkins AI" class="w-full h-full object-cover" onerror="this.style.display='none'" />
+            </div>
+            <h2 class="font-cyber font-bold text-lg sm:text-xl text-white tracking-wide mb-1.5">
+              What can I help with?
+            </h2>
+            <p class="text-xs text-slate-400 max-w-md mb-5">
+              Ask any question, write code, or try <span class="text-red-400">UPSIDE DOWN</span>, <span class="text-fuchsia-400">VECNA</span>, &amp; <span class="text-amber-300">LIGHT BLINKS</span> commands.
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 w-full max-w-xl text-left">
+              <button type="button" class="quick-prompt p-3 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] border border-purple-800/50 hover:border-red-400/60 transition cursor-pointer" data-prompt="Explain how an AI Chatbot works for my college viva!">
+                <div class="text-xs font-medium text-slate-200">🎓 Explain AI Chatbot for Viva</div>
+                <div class="text-[11px] text-slate-400 mt-0.5">Simple &amp; clear architecture overview</div>
+              </button>
+              <button type="button" class="quick-prompt p-3 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] border border-purple-800/50 hover:border-cyan-400/60 transition cursor-pointer" data-prompt="Write a clean Python program for binary search with explanation.">
+                <div class="text-xs font-medium text-slate-200">💻 Python Binary Search</div>
+                <div class="text-[11px] text-slate-400 mt-0.5">Clean code with step-by-step logic</div>
+              </button>
+            </div>
+          </div>
+        `;
+        bindQuickPromptButtons();
+      }
+    }
+
+    function renderChatHistorySidebar() {
+      if (!chatHistoryList) return;
+      chatHistoryList.innerHTML = '';
+      chatSessions.forEach(sess => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        const isActive = sess.id === currentSessionId;
+        btn.className = `w-full text-left px-3 py-2 rounded-xl text-xs truncate transition cursor-pointer ${
+          isActive
+            ? 'bg-red-600/25 border border-red-400/60 text-white font-medium'
+            : 'text-slate-300 hover:bg-white/5 border border-transparent'
+        }`;
+        btn.textContent = sess.title;
+        btn.addEventListener('click', () => {
+          loadChatSession(sess.id);
+          closeMobileSidebar();
+        });
+        chatHistoryList.appendChild(btn);
+      });
+    }
+
+    function loadChatSession(sessionId) {
+      const sess = chatSessions.find(s => s.id === sessionId);
+      if (!sess || !chatContainer) return;
+      currentSessionId = sessionId;
+      renderChatHistorySidebar();
+      chatContainer.innerHTML = '';
+      if (sess.messages.length === 0) {
+        createNewChatSession(true);
+        return;
+      }
+      sess.messages.forEach(m => renderMessageBubble(m.role, m.text, m.persona || activePersona, false));
+    }
+
+    function formatRichText(rawText) {
+      const escaped = rawText
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+      return escaped
+        .replace(/```([\s\S]*?)```/g, '<pre class="mt-2 mb-2 p-3 rounded-xl bg-[#05010a] border border-purple-700/60 text-cyan-200 text-xs font-mono overflow-x-auto whitespace-pre-wrap">$1</pre>')
+        .replace(/`([^`]+)`/g, '<code class="px-1.5 py-0.5 rounded bg-black/60 text-amber-300 font-mono text-xs">$1</code>')
+        .replace(/\*\*([^*]+)\*\*/g, '<strong class="text-white font-semibold">$1</strong>')
+        .replace(/\n/g, '<br>');
+    }
+
+    function copyMessageText(btnEl, rawText) {
+      try {
+        const tempArea = document.createElement('textarea');
+        tempArea.value = rawText;
+        tempArea.style.position = 'fixed';
+        tempArea.style.opacity = '0';
+        document.body.appendChild(tempArea);
+        tempArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(tempArea);
+        btnEl.textContent = '✓ COPIED';
+        btnEl.classList.add('text-emerald-300');
+        setTimeout(() => {
+          btnEl.textContent = '📋 COPY';
+          btnEl.classList.remove('text-emerald-300');
+        }, 1600);
+      } catch (e) {}
+    }
+
+    function renderMessageBubble(role, text, personaKey = activePersona, animateTypewriter = false) {
+      if (!chatContainer) return;
+      const welcomeHero = document.getElementById('chatGptWelcomeHero');
+      if (welcomeHero) welcomeHero.remove();
+
+      const wrapper = document.createElement('div');
+      wrapper.className = `msg-materialize flex ${role === 'user' ? 'justify-end' : 'justify-start'} gap-2.5`;
+
+      if (role === 'user') {
+        wrapper.innerHTML = `
+          <div class="max-w-[82%] sm:max-w-[75%] rounded-2xl rounded-tr-sm px-4 py-2.5 bg-gradient-to-r from-red-600/85 to-fuchsia-800/85 border border-red-400/50 text-white text-sm leading-relaxed shadow-md">
+            ${formatRichText(text)}
+          </div>
+        `;
+      } else {
+        const meta = personaConfigs[personaKey] || personaConfigs.cerebro;
+        wrapper.innerHTML = `
+          <div class="w-7 h-7 rounded-lg overflow-hidden border border-red-400/60 shrink-0 mt-1 bg-black shadow-[0_0_10px_rgba(255,42,26,0.35)]">
+            <img src="${meta.img}" alt="${meta.name}" style="${meta.imgStyle}" class="w-full h-full object-cover" onerror="this.style.display='none'" />
+          </div>
+          <div class="max-w-[85%] sm:max-w-[78%] rounded-2xl rounded-tl-sm px-4 py-3 bg-[#090312]/90 backdrop-blur-md border border-purple-700/60 text-slate-200 text-sm leading-relaxed shadow-md">
+            <div class="flex items-center justify-between gap-3 mb-1">
+              <span class="font-cyber text-[10px] tracking-wider text-red-400 uppercase">${meta.name}</span>
+              <div class="flex items-center gap-2">
+                <button type="button" class="regen-msg-btn text-[10px] font-cyber text-slate-400 hover:text-cyan-300 transition cursor-pointer" title="Regenerate Reply">↻</button>
+                <button type="button" class="copy-msg-btn text-[10px] font-cyber text-slate-400 hover:text-white transition cursor-pointer">📋 COPY</button>
+              </div>
+            </div>
+            <div class="bot-msg-body"></div>
+          </div>
+        `;
+        const bodyEl = wrapper.querySelector('.bot-msg-body');
+        if (animateTypewriter && bodyEl && text.length > 0) {
+          let cursor = 0;
+          const chunk = Math.max(3, Math.ceil(text.length / 45));
+          const typeTimer = setInterval(() => {
+            cursor += chunk;
+            if (cursor >= text.length) {
+              bodyEl.innerHTML = formatRichText(text);
+              clearInterval(typeTimer);
+            } else {
+              bodyEl.innerHTML = formatRichText(text.slice(0, cursor)) + '<span class="inline-block w-1.5 h-3.5 bg-red-400 ml-0.5 animate-pulse align-middle"></span>';
+            }
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+          }, 18);
+        } else if (bodyEl) {
+          bodyEl.innerHTML = formatRichText(text);
+        }
+
+        const copyBtn = wrapper.querySelector('.copy-msg-btn');
+        if (copyBtn) {
+          copyBtn.addEventListener('click', () => copyMessageText(copyBtn, text));
+        }
+        const regenBtn = wrapper.querySelector('.regen-msg-btn');
+        if (regenBtn) {
+          regenBtn.addEventListener('click', () => {
+            const sess = chatSessions.find(s => s.id === currentSessionId);
+            const lastUserMsg = sess?.messages.slice().reverse().find(m => m.role === 'user');
+            if (lastUserMsg) handleUserSubmission(lastUserMsg.text, true);
+          });
+        }
+      }
+
+      chatContainer.appendChild(wrapper);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    function appendMessage(role, text, personaKey = activePersona, animateTypewriter = false) {
+      let sess = chatSessions.find(s => s.id === currentSessionId);
+      if (!sess) {
+        createNewChatSession(false);
+        sess = chatSessions[0];
+      }
+      if (role === 'user' && sess.messages.length === 0) {
+        sess.title = text.slice(0, 32) + (text.length > 32 ? '...' : '');
+        renderChatHistorySidebar();
+      }
+      sess.messages.push({ role, text, persona: personaKey });
+      renderMessageBubble(role, text, personaKey, animateTypewriter);
+    }
+
+    function showTypingIndicator() {
+      if (!chatContainer) return null;
+      const el = document.createElement('div');
+      el.id = 'typingIndicator';
+      el.className = 'flex items-center gap-2 text-xs text-slate-400 px-2 py-1';
+      el.innerHTML = `
+        <span class="w-2 h-2 rounded-full bg-red-500 typing-dot"></span>
+        <span class="w-2 h-2 rounded-full bg-fuchsia-500 typing-dot"></span>
+        <span class="w-2 h-2 rounded-full bg-cyan-400 typing-dot"></span>
+        <span class="font-cyber text-[10px] tracking-wider ml-1">THINKING...</span>
+      `;
+      chatContainer.appendChild(el);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+      return el;
+    }
+
+    function checkEasterEggTriggers(text) {
+      const upper = text.toUpperCase();
+      vinePulse = 1.6;
+
+      if (upper.includes('UPSIDE DOWN')) {
+        document.body.classList.toggle('upside-down-flipped');
+        triggerShockwaveEffect();
+        spawnLightningBolt();
+        synth.playClockChime();
+        return '🌀 **DIMENSIONAL GRAVITY FLIPPED!** Type `UPSIDE DOWN` again to return Hawkins to normal orientation.';
+      }
+      if (upper.includes('VECNA')) {
+        applyCharacterTheme('vecna', true);
+        for (let i = 0; i < 4; i++) {
+          setTimeout(() => {
+            redScreenPulse = 1.0;
+            synth.playClockChime();
+            spawnLightningBolt();
+          }, i * 520);
+        }
+        return '🕰️ *CHIME... CHIME... CHIME... CHIME...* Four chimes echo from the Creel House grandfather clock. Speak your question before time runs out.';
+      }
+      if (upper.includes('LIGHT BLINKS') || upper.includes('BLINK')) {
+        triggerLightBlinkStorm(headerBulbList);
+        setTimeout(() => spellOnChatWall('HELLOHAWKINS'), 900);
+        return '💡 **BYERS WALL SURGE DETECTED!** Watch the alphabet Christmas lights flash across Hawkins above.';
+      }
+      if (upper.includes('DEMOGORGON') || upper.includes('MIND FLAYER')) {
+        applyCharacterTheme('mindflayer', true);
+        triggerShockwaveEffect();
+        redScreenPulse = 0.95;
+        synth.playDemogorgonGrowl();
+        return '🩸 **APEX RIFT PREDATOR ALERT:** Both the Demogorgon and Mind Flayer share the Hive Mind! Keep fire and Eleven’s telekinesis ready.';
+      }
+      return null;
+    }
+
+    function getSmartLocalReply(prompt, personaKey) {
+      const q = prompt.trim();
+      const lower = q.toLowerCase();
+
+      if (/^(h+i+|h+e+l+o+|h+e+y+|namaste|hlo+|yo+|sup|wassup|what'?s up|kaise ho|kya haal|how are you|good morning|good evening|good night)\b/i.test(lower)) {
+        const greetings = {
+          eleven: 'Hi! Friends don’t lie—I am ready to help you. What do you want to talk about?',
+          steve: 'Ahoy! Steve Harrington here—spiked bat at the ready and hair looking great. What’s going on, buddy? How can I help you out?',
+          dustin: 'Do you copy?! Dusty Bun on the Cerebro frequency! Loud and clear—what’s on your mind?',
+          vecna: 'I have been waiting for you... Speak your question before the clock chimes.',
+          mindflayer: 'The Hive Mind hears you... Speak.',
+          cerebro: 'Hello! Hawkins AI is online and ready. Aap kya poochhna chahte hain?'
+        };
+        return greetings[personaKey] || greetings.cerebro;
+      }
+
+      if (lower.includes('who are you') || lower.includes('tum kaun') || lower.includes('apne baare')) {
+        const intros = {
+          eleven: 'I am Eleven (011). I closed the gate to the Upside Down, and I protect my friends.',
+          steve: 'I’m Steve "The Hair" Harrington—former King of Hawkins High, Scoops Ahoy veteran, and full-time babysitter to a bunch of monster-fighting kids!',
+          dustin: 'I’m Dustin Henderson—science nerd, D&D strategist, and builder of the Cerebro radio tower!',
+          vecna: 'I am Henry Creel... 001... Vecna, architect of the Upside Down.',
+          mindflayer: 'We are the shadow of the Upside Down—the Hive Mind.',
+          cerebro: 'I am Hawkins Lab Cerebro AI, your neural assistant for coding, study, and Stranger Things lore.'
+        };
+        return intros[personaKey] || intros.cerebro;
+      }
+
+      if (lower.includes('viva') || (lower.includes('how') && lower.includes('chatbot'))) {
+        return '**How an AI Chatbot Works (College Viva Summary):**\n' +
+          '1. **Frontend UI:** Captures user text/voice input and displays structured responses.\n' +
+          '2. **Prompt & Context Layer:** Attaches system instructions, persona rules, and recent conversation history.\n' +
+          '3. **NLP / LLM Inference Engine:** Tokenizes the prompt, runs Transformer self-attention layers, and predicts the most relevant response.\n' +
+          '4. **Fallback & Safety Handler:** Ensures zero downtime with local routing if external APIs are offline.';
+      }
+
+      if (lower.includes('binary search') && lower.includes('python')) {
+        return 'Here is a clean **Python Binary Search** implementation (`O(log n)` time complexity):\n' +
+          '```python\ndef binary_search(arr, target):\n    left, right = 0, len(arr) - 1\n    while left <= right:\n        mid = (left + right) // 2\n        if arr[mid] == target:\n            return mid\n        elif arr[mid] < target:\n            left = mid + 1\n        else:\n            right = mid - 1\n    return -1\n\nnums = [2, 5, 8, 12, 16, 23, 38]\nprint("Found at index:", binary_search(nums, 16))\n```';
+      }
+
+      const mathMatch = lower.match(/^(\d+(?:\.\d+)?)\s*([+\-*/])\s*(\d+(?:\.\d+)?)$/);
+      if (mathMatch) {
+        const a = parseFloat(mathMatch[1]);
+        const op = mathMatch[2];
+        const b = parseFloat(mathMatch[3]);
+        const res = op === '+' ? a + b : op === '-' ? a - b : op === '*' ? a * b : b !== 0 ? a / b : 'Undefined (division by zero)';
+        return `**Result:** \`${a} ${op} ${b} = ${res}\``;
+      }
+
+      if (lower.includes('stranger things')) {
+        return '**Stranger Things** is set in 1980s Hawkins, Indiana, where a secret government lab opens a rift to the **Upside Down**—a dark alternate dimension ruled by the Mind Flayer and Vecna, defended by Eleven and her friends.';
+      }
+
+      const personaFallbacks = {
+        steve: `Hey, I heard you say **"${q}"**! Look, I’m running on Hawkins local walkie-talkie mode right now—if you want me to answer literally anything on Earth, just click **🔑 API KEY** at the top right and drop in a Gemini (\`AIza...\`) or OpenAI (\`sk-...\`) key!`,
+        eleven: `I hear **"${q}"**... My long-range Void signal needs a **🔑 API KEY** (Gemini or OpenAI) in the top-right corner to reach full power.`,
+        dustin: `Copy that on **"${q}"**! Cerebro is in local offline mode right now—plug a Gemini (\`AIza...\`) or OpenAI (\`sk-...\`) key into **🔑 API KEY** up top to unlock full mainframe power!`,
+        vecna: `Your words—**"${q}"**—echo in the dark... Unlock my full power by placing a Gemini or OpenAI key inside **🔑 API KEY** above.`,
+        mindflayer: `The Hive Mind senses **"${q}"**... Connect a **🔑 API KEY** above to unleash full awareness.`,
+        cerebro: `I received your message: **"${q}"**.\n\nRight now I am running in **Built-in Smart Mode**. For full open-ended generative AI answers on any topic, click **🔑 API KEY** in the top-right corner and paste a Google Gemini (\`AIza...\`) or OpenAI (\`sk-...\`) key!`
+      };
+
+      return personaFallbacks[personaKey] || personaFallbacks.cerebro;
+    }
+
+    async function fetchWithBackoff(url, options, maxRetries = 2) {
+      let delay = 800;
+      for (let attempt = 0; attempt <= maxRetries; attempt++) {
+        const res = await fetch(url, options);
+        if (res.ok || (res.status !== 429 && res.status < 500)) {
+          return res;
+        }
+        if (attempt < maxRetries) {
+          await new Promise(r => setTimeout(r, delay));
+          delay *= 2;
+        }
+      }
+      throw new Error('Request throttled');
+    }
+
+    async function fetchAiReply(prompt) {
+      const egg = checkEasterEggTriggers(prompt);
+      if (egg) return egg;
+
+      const customApiKey = safeGetStorage('strangerbot_api_key', '').trim();
+      const provider = safeGetStorage('strangerbot_provider', 'gemini');
+      const meta = personaConfigs[activePersona] || personaConfigs.cerebro;
+      const sess = chatSessions.find(s => s.id === currentSessionId);
+      const recentHistory = (sess?.messages || []).slice(-6);
+
+      try {
+        if (customApiKey && (provider === 'openai' || customApiKey.startsWith('sk-'))) {
+          const openAiMessages = [
+            { role: 'system', content: meta.system + ' Match the user\'s language (English, Hindi, or Hinglish) naturally.' },
+            ...recentHistory.map(m => ({ role: m.role === 'bot' ? 'assistant' : 'user', content: m.text })),
+            { role: 'user', content: prompt }
+          ];
+          const res = await fetchWithBackoff('https://api.openai.com/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${customApiKey}`
+            },
+            body: JSON.stringify({
+              model: 'gpt-4o-mini',
+              messages: openAiMessages
+            })
+          });
+          if (!res.ok) throw new Error('OpenAI request failed');
+          const data = await res.json();
+          return data.choices?.[0]?.message?.content || getSmartLocalReply(prompt, activePersona);
+        } else {
+          const apiKey = customApiKey || '';
+          const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${encodeURIComponent(apiKey)}`;
+          const contents = [
+            ...recentHistory.map(m => ({
+              role: m.role === 'bot' ? 'model' : 'user',
+              parts: [{ text: m.text }]
+            })),
+            { role: 'user', parts: [{ text: prompt }] }
+          ];
+          const res = await fetchWithBackoff(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              systemInstruction: {
+                parts: [{ text: meta.system + ' Answer accurately, concisely, and match the user\'s language (Hindi, Hinglish, or English).' }]
+              },
+              contents
+            })
+          });
+          if (!res.ok) throw new Error('Gemini request failed');
+          const data = await res.json();
+          return data.candidates?.[0]?.content?.parts?.[0]?.text || getSmartLocalReply(prompt, activePersona);
+        }
+      } catch (err) {
+        return getSmartLocalReply(prompt, activePersona);
+      }
+    }
+
+    async function handleUserSubmission(text, isRegenerate = false) {
+      const clean = (text || '').trim();
+      if (!clean) return;
+      if (!isRegenerate) {
+        appendMessage('user', clean);
+      }
+      spellOnChatWall(clean);
+      if (userInput) userInput.value = '';
+
+      const typingEl = showTypingIndicator();
+      const reply = await fetchAiReply(clean);
+      if (typingEl) typingEl.remove();
+      appendMessage('bot', reply, activePersona, true);
+      spellOnChatWall(reply.slice(0, 14));
+    }
+
+    chatForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      handleUserSubmission(userInput.value);
+    });
+
+    function bindQuickPromptButtons() {
+      document.querySelectorAll('.quick-prompt').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const promptText = btn.getAttribute('data-prompt');
+          if (promptText) handleUserSubmission(promptText);
+        });
+      });
+    }
+
+    document.getElementById('newChatSidebarBtn')?.addEventListener('click', () => {
+      createNewChatSession(true);
+      closeMobileSidebar();
+    });
+    document.getElementById('mobileNewChatBtn')?.addEventListener('click', () => createNewChatSession(true));
+    document.getElementById('clearChatBtn')?.addEventListener('click', () => {
+      createNewChatSession(true);
+      closeMobileSidebar();
+    });
+
+    // Voice Input (Speech-to-Text Mic Only — AI Voice Output stays OFF)
+    const voiceInputBtn = document.getElementById('voiceInputBtn');
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition && voiceInputBtn) {
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'en-US';
+      recognition.interimResults = false;
+
+      voiceInputBtn.addEventListener('click', () => {
+        try {
+          recognition.start();
+          voiceInputBtn.classList.add('text-red-400', 'animate-pulse');
+        } catch (e) {}
+      });
+
+      recognition.onresult = (event) => {
+        const transcript = event.results?.[0]?.[0]?.transcript || '';
+        if (userInput && transcript) {
+          userInput.value = transcript;
+          userInput.focus();
+        }
+      };
+
+      recognition.onend = () => {
+        voiceInputBtn.classList.remove('text-red-400', 'animate-pulse');
+      };
+    }
+
+    // Initialize App State Safely on Load
+    applyCharacterTheme(activePersona, false);
+    updateApiBadge();
+    createNewChatSession(false);
+    bindQuickPromptButtons();
+  </script>
+</body>
+</html>
